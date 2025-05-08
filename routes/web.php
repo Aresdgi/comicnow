@@ -20,11 +20,13 @@ Route::get('/buscar', [ComicController::class, 'buscar'])->name('comics.buscar')
 Route::get('/contacto', function () { return view('contacto'); })->name('contacto');
 Route::get('/sobre-nosotros', function () { return view('about'); })->name('about');
 
-// Rutas de autenticación
-Auth::routes();
-
 // Rutas para usuarios autenticados
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    // Dashboard de Jetstream
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
     // Perfil de usuario
     Route::get('/perfil', [UsuarioController::class, 'perfil'])->name('usuario.perfil');
     Route::put('/perfil', [UsuarioController::class, 'actualizar'])->name('usuario.actualizar');
@@ -94,4 +96,14 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('/autores', [AutorController::class, 'api'])->name('api.autores');
     Route::post('/carrito', [CarritoController::class, 'apiAgregar'])->name('api.carrito');
     Route::get('/busqueda', [ComicController::class, 'apiBusqueda'])->name('api.busqueda');
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
