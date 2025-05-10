@@ -33,6 +33,12 @@ class Comic extends Model
     {
         return $this->hasMany(DetallePedido::class, 'id_comic');
     }
+    
+    // Alias para detallesPedido() para mantener compatibilidad con el código existente
+    public function detallePedidos()
+    {
+        return $this->detallesPedido();
+    }
 
     // Relación con reseñas (un comic puede tener muchas reseñas)
     public function resenas()

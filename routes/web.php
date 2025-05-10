@@ -11,7 +11,9 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\AdminController;
 
 // Rutas públicas
-Route::get('/', [ComicController::class, 'destacados'])->name('home');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 Route::get('/comics', [ComicController::class, 'index'])->name('comics.index');
 Route::get('/comics/{id}', [ComicController::class, 'show'])->name('comics.show');
 Route::get('/autores', [AutorController::class, 'index'])->name('autores.index');

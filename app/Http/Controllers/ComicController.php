@@ -179,11 +179,11 @@ class ComicController extends Controller
                            ->take(6)
                            ->get();
                            
-        $ultimosLanzamientos = Comic::orderByDesc('año_publicacion')
+        $ultimosLanzamientos = Comic::orderByDesc('created_at')
                               ->take(6)
                               ->get();
         
-        return view('comics.destacados', compact('masVendidos', 'mejorValorados', 'ultimosLanzamientos'));
+        return view('home', compact('masVendidos', 'mejorValorados', 'ultimosLanzamientos'));
     }
     
     /**
