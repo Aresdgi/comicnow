@@ -9,6 +9,13 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ComicController as AdminComicController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\PedidoController as AdminPedidoController;
+use App\Http\Controllers\Admin\AutorController as AdminAutorController;
+use App\Http\Controllers\Admin\ResenaController as AdminResenaController;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -24,9 +31,12 @@ Route::get('/sobre-nosotros', function () { return view('about'); })->name('abou
 
 // Rutas para usuarios autenticados
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    // Dashboard de Jetstream
+    // Dashboard principal - redirecciona según el rol
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        if(auth()->user()->rol === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('user.dashboard');
     })->name('dashboard');
     
     // Perfil de usuario
@@ -56,39 +66,38 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::delete('/resenas/{id}', [ResenaController::class, 'destroy'])->name('resenas.destroy');
 });
 
-// Rutas de administración
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+// Rutas de administración unificadas
+Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     
-    // Gestión de cómics
-    Route::get('/comics', [AdminController::class, 'comics'])->name('admin.comics');
-    Route::get('/comics/crear', [AdminController::class, 'comicCrear'])->name('admin.comics.crear');
-    Route::post('/comics', [AdminController::class, 'comicStore'])->name('admin.comics.store');
-    Route::get('/comics/editar/{id}', [AdminController::class, 'comicEditar'])->name('admin.comics.editar');
-    Route::put('/comics/{id}', [AdminController::class, 'comicUpdate'])->name('admin.comics.update');
-    Route::delete('/comics/{id}', [AdminController::class, 'comicDestroy'])->name('admin.comics.destroy');
+    // Rutas para gestión de cómics
+    Route::resource('comics', AdminComicController::class);
     
-    // Gestión de autores
-    Route::get('/autores', [AdminController::class, 'autores'])->name('admin.autores');
-    Route::get('/autores/crear', [AdminController::class, 'autorCrear'])->name('admin.autores.crear');
-    Route::post('/autores', [AdminController::class, 'autorStore'])->name('admin.autores.store');
-    Route::get('/autores/editar/{id}', [AdminController::class, 'autorEditar'])->name('admin.autores.editar');
-    Route::put('/autores/{id}', [AdminController::class, 'autorUpdate'])->name('admin.autores.update');
-    Route::delete('/autores/{id}', [AdminController::class, 'autorDestroy'])->name('admin.autores.destroy');
+    // Rutas para gestión de usuarios
+    Route::resource('users', AdminUserController::class);
     
-    // Gestión de usuarios
-    Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
-    Route::get('/usuarios/editar/{id}', [AdminController::class, 'usuarioEditar'])->name('admin.usuarios.editar');
-    Route::put('/usuarios/{id}', [AdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
-    Route::delete('/usuarios/{id}', [AdminController::class, 'usuarioDestroy'])->name('admin.usuarios.destroy');
+    // Rutas para gestión de pedidos
+    Route::resource('pedidos', AdminPedidoController::class);
     
-    // Gestión de pedidos
-    Route::get('/pedidos', [AdminController::class, 'pedidos'])->name('admin.pedidos');
-    Route::get('/pedidos/{id}', [AdminController::class, 'pedidoShow'])->name('admin.pedidos.show');
-    Route::put('/pedidos/{id}/estado', [AdminController::class, 'pedidoActualizarEstado'])->name('admin.pedidos.estado');
+    // Rutas para gestión de autores
+    Route::resource('autores', AdminAutorController::class);
+    
+    // Rutas para gestión de reseñas
+    Route::resource('resenas', AdminResenaController::class);
     
     // Estadísticas
-    Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('admin.estadisticas');
+    Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('estadisticas');
+});
+
+// Rutas para usuarios normales
+Route::prefix('user')->name('user.')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+    
+    // Rutas para reseñas
+    Route::get('/resenas', [App\Http\Controllers\User\ResenaController::class, 'index'])->name('resenas');
+    Route::get('/resenas/{id}/edit', [App\Http\Controllers\User\ResenaController::class, 'edit'])->name('resenas.edit');
+    Route::put('/resenas/{id}', [App\Http\Controllers\User\ResenaController::class, 'update'])->name('resenas.update');
+    Route::delete('/resenas/{id}', [App\Http\Controllers\User\ResenaController::class, 'destroy'])->name('resenas.destroy');
 });
 
 // API para interacciones AJAX
@@ -98,14 +107,4 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('/autores', [AutorController::class, 'api'])->name('api.autores');
     Route::post('/carrito', [CarritoController::class, 'apiAgregar'])->name('api.carrito');
     Route::get('/busqueda', [ComicController::class, 'apiBusqueda'])->name('api.busqueda');
-});
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 });

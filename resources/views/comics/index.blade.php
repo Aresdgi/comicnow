@@ -8,14 +8,19 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @forelse($comics ?? [] as $comic)
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <img class="w-full h-64 object-cover object-center" src="{{ $comic->imagen ?? 'https://via.placeholder.com/300x400?text=Comic' }}" alt="{{ $comic->titulo ?? 'Comic' }}">
+                    <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
+                        <!-- Contenedor de imagen con altura automática -->
+                        <div class="min-h-64 h-auto overflow-hidden flex-grow">
+                            <img class="mx-auto h-auto max-h-96 max-w-full" 
+                                src="{{ $comic->portada_url ? asset('storage/' . $comic->portada_url) : 'https://via.placeholder.com/300x400?text=Comic' }}" 
+                                alt="{{ $comic->titulo ?? 'Comic' }}">
+                        </div>
                         <div class="p-4">
                             <h3 class="text-lg font-semibold text-gray-900">{{ $comic->titulo ?? 'Título del Comic' }}</h3>
                             <p class="text-sm text-gray-600">{{ $comic->autor->nombre ?? 'Autor' }}</p>
                             <div class="mt-4 flex justify-between items-center">
                                 <span class="text-gray-700 font-medium">{{ $comic->precio ?? '$0.00' }}</span>
-                                <a href="{{ route('comics.show', $comic->id ?? 1) }}" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700">Ver</a>
+                                <a href="{{ route('comics.show', $comic->id_comic) }}" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700">Ver</a>
                             </div>
                         </div>
                     </div>

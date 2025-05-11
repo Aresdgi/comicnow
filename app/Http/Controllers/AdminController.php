@@ -17,17 +17,22 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
     /**
-     * Constructor que verifica que solo los administradores puedan acceder
+     * Constructor.
      */
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || Auth::user()->rol !== 'admin') {
-                return redirect('/login')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
-            }
-            
-            return $next($request);
-        });
+        // No usamos middleware aquí para evitar problemas
+    }
+    
+    /**
+     * Verifica si el usuario es administrador.
+     */
+    private function checkAdmin()
+    {
+        if (!Auth::check() || Auth::user()->rol !== 'admin') {
+            return false;
+        }
+        return true;
     }
     
     /**
@@ -35,6 +40,10 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         // Obtener estadísticas para el dashboard
         $stats = [
             'total_comics' => Comic::count(),
@@ -66,6 +75,10 @@ class AdminController extends Controller
      */
     public function pedidos()
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         $pedidos = Pedido::with(['usuario', 'detalles.comic'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -78,6 +91,10 @@ class AdminController extends Controller
      */
     public function detallePedido($id)
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         $pedido = Pedido::with(['usuario', 'detalles.comic'])
             ->findOrFail($id);
             
@@ -89,6 +106,10 @@ class AdminController extends Controller
      */
     public function actualizarEstadoPedido(Request $request, $id)
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         $request->validate([
             'estado' => 'required|in:pendiente,procesando,enviado,completado,cancelado'
         ]);
@@ -114,6 +135,10 @@ class AdminController extends Controller
      */
     public function estadisticas()
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         // Ventas por mes (último año)
         $ventas_mensuales = DB::table('pedidos')
             ->select(DB::raw('MONTH(created_at) as mes, YEAR(created_at) as año, SUM(total) as total_ventas'))
@@ -142,6 +167,10 @@ class AdminController extends Controller
      */
     public function usuarios()
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         $usuarios = Usuario::orderBy('created_at', 'desc')->paginate(15);
         return view('admin.usuarios', compact('usuarios'));
     }
@@ -151,6 +180,10 @@ class AdminController extends Controller
      */
     public function cambiarRolUsuario(Request $request, $id)
     {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
         $request->validate([
             'rol' => 'required|in:usuario,admin'
         ]);
@@ -160,5 +193,172 @@ class AdminController extends Controller
         $usuario->save();
         
         return redirect()->back()->with('success', 'Rol de usuario actualizado correctamente.');
+    }
+    
+    /**
+     * Muestra el formulario para editar un cómic.
+     */
+    public function comicEditar($id)
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $comic = Comic::findOrFail($id);
+        $autores = Autor::all();
+        
+        return view('admin.comics.edit', compact('comic', 'autores'));
+    }
+    
+    /**
+     * Actualiza un cómic existente en la base de datos.
+     */
+    public function comicUpdate(Request $request, $id)
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'id_autor' => 'required|exists:autores,id_autor',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'portada_url' => 'nullable|image|max:2048',
+            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+        ]);
+
+        $comic = Comic::findOrFail($id);
+        
+        // Actualizar los datos básicos
+        $comic->titulo = $request->titulo;
+        $comic->id_autor = $request->id_autor;
+        $comic->descripcion = $request->descripcion;
+        $comic->precio = $request->precio;
+        $comic->stock = $request->stock;
+
+        // Manejar la portada si se sube una nueva
+        if ($request->hasFile('portada_url')) {
+            // Eliminar la portada anterior si existe
+            if ($comic->portada_url && Storage::disk('public')->exists($comic->portada_url)) {
+                Storage::disk('public')->delete($comic->portada_url);
+            }
+            $portadaPath = $request->file('portada_url')->store('portadas', 'public');
+            $comic->portada_url = $portadaPath;
+        }
+
+        // Manejar el archivo si se sube uno nuevo
+        if ($request->hasFile('archivo_url')) {
+            // Eliminar el archivo anterior si existe
+            if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+                Storage::disk('public')->delete($comic->archivo_comic);
+            }
+            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
+            $comic->archivo_comic = $archivoPath;
+        }
+
+        $comic->save();
+
+        return redirect()->route('admin.comics')->with('success', 'Cómic actualizado exitosamente');
+    }
+    
+    /**
+     * Elimina un cómic de la base de datos.
+     */
+    public function comicDestroy($id)
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $comic = Comic::findOrFail($id);
+        
+        // Comprobar si hay reseñas, pedidos o biblioteca relacionados antes de eliminar
+        if ($comic->resenas()->count() > 0 || $comic->detallePedidos()->count() > 0 || $comic->biblioteca()->count() > 0) {
+            return back()->with('error', 'No se puede eliminar el cómic porque tiene reseñas, pedidos o está en bibliotecas de usuarios');
+        }
+        
+        // Eliminar archivos asociados
+        if ($comic->portada_url && Storage::disk('public')->exists($comic->portada_url)) {
+            Storage::disk('public')->delete($comic->portada_url);
+        }
+        
+        if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
+            Storage::disk('public')->delete($comic->archivo_url);
+        }
+        
+        $comic->delete();
+
+        return redirect()->route('admin.comics')->with('success', 'Cómic eliminado exitosamente');
+    }
+    
+    /**
+     * Muestra la lista de todos los cómics para administración.
+     */
+    public function comics()
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $comics = Comic::with('autor')->get();
+        return view('admin.comics.index', compact('comics'));
+    }
+    
+    /**
+     * Muestra el formulario para crear un nuevo cómic.
+     */
+    public function comicCrear()
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $autores = Autor::all();
+        return view('admin.comics.create', compact('autores'));
+    }
+    
+    /**
+     * Almacena un nuevo cómic en la base de datos.
+     */
+    public function comicStore(Request $request)
+    {
+        if (!$this->checkAdmin()) {
+            return redirect('/')->with('error', 'Acceso denegado. Se requieren privilegios de administrador.');
+        }
+
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'id_autor' => 'required|exists:autores,id_autor',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'portada_url' => 'nullable|image|max:2048',
+            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+        ]);
+
+        $comic = new Comic();
+        $comic->titulo = $request->titulo;
+        $comic->id_autor = $request->id_autor;
+        $comic->descripcion = $request->descripcion;
+        $comic->precio = $request->precio;
+        $comic->stock = $request->stock;
+
+        // Manejar la imagen de portada
+        if ($request->hasFile('portada_url')) {
+            $portadaPath = $request->file('portada_url')->store('portadas', 'public');
+            $comic->portada_url = $portadaPath;
+        }
+
+        // Manejar el archivo del cómic
+        if ($request->hasFile('archivo_url')) {
+            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
+            $comic->archivo_comic = $archivoPath;
+        }
+
+        $comic->save();
+
+        return redirect()->route('admin.comics')->with('success', 'Cómic creado exitosamente');
     }
 }
