@@ -33,15 +33,38 @@
                                 Inicio
                             </a>
                             <a href="{{ route('comics.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition">
-                                Biblioteca
+                                Catálogo
                             </a>
+                            @auth
+                            <a href="{{ route('biblioteca.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition">
+                                Tu Biblioteca
+                            </a>
+                            @endauth
                         </div>
                     </div>
                     
                     <!-- Login/Register Links -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 hover:text-indigo-600">Dashboard</a>
+                            <div class="relative ml-3">
+                                <button id="user-menu-button" class="flex text-sm focus:outline-none items-center">
+                                    <span class="mr-2">{{ Auth::user()->name }}</span>
+                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                    <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1">
+                                    <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         @else
                             <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600 mr-4">Iniciar Sesión</a>
                             
@@ -71,16 +94,41 @@
                         Inicio
                     </a>
                     <a href="{{ route('comics.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition">
-                        Biblioteca
+                        Catálogo
                     </a>
+                    @auth
+                    <a href="{{ route('biblioteca.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition">
+                        Tu Biblioteca
+                    </a>
+                    @endauth
                 </div>
                 
                 <!-- Responsive Authentication Links -->
                 <div class="pt-4 pb-1 border-t border-gray-200">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300">
-                            Dashboard
-                        </a>
+                        <div class="flex items-center px-4 py-2">
+                            <div class="flex-shrink-0 mr-3">
+                                <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                            </div>
+                            <div>
+                                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                            </div>
+                        </div>
+                        <div class="mt-3 space-y-1">
+                            <a href="{{ route('dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300">
+                                Dashboard
+                            </a>
+                            <a href="{{ route('profile.show') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300">
+                                Perfil
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300">
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300">
                             Iniciar Sesión
@@ -108,12 +156,32 @@
             </div>
         </footer>
         
-        <!-- Scripts para el menú móvil -->
+        <!-- Scripts para el menú móvil y desplegable de usuario -->
         <script>
+            // Manejo del botón hamburger
             document.getElementById('hamburger-button').addEventListener('click', function() {
                 const mobileMenu = document.getElementById('mobile-menu');
                 mobileMenu.classList.toggle('hidden');
             });
+
+            // Manejo del menú de usuario
+            const userMenuButton = document.getElementById('user-menu-button');
+            if (userMenuButton) {
+                userMenuButton.addEventListener('click', function() {
+                    const dropdown = document.getElementById('user-menu-dropdown');
+                    dropdown.classList.toggle('hidden');
+                });
+
+                // Cerrar el menú desplegable cuando se hace clic fuera
+                document.addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('user-menu-dropdown');
+                    const button = document.getElementById('user-menu-button');
+                    if (!dropdown || !button) return;
+                    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
         </script>
     </body>
 </html>

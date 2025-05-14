@@ -12,15 +12,15 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('comics.index') }}" :active="request()->routeIs('comics.index')">
-                        {{ __('Cómics') }}
+                    <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                        {{ __('Inicio') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('autores.index') }}" :active="request()->routeIs('autores.index')">
-                        {{ __('Autores') }}
+                    <x-nav-link href="{{ route('comics.index') }}" :active="request()->routeIs('comics.index')">
+                        {{ __('Catálogo') }}
                     </x-nav-link>
                     @auth
                         <x-nav-link href="{{ route('biblioteca.index') }}" :active="request()->routeIs('biblioteca.index')">
-                            {{ __('Mi Biblioteca') }}
+                            {{ __('Tu Biblioteca') }}
                         </x-nav-link>
                     @endauth
                 </div>
@@ -104,11 +104,15 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Gestionar Cuenta') }}
                             </div>
 
+                            <x-dropdown-link href="{{ route('dashboard') }}">
+                                {{ __('Dashboard') }}
+                            </x-dropdown-link>
+
                             <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('Perfil') }}
                             </x-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -125,7 +129,7 @@
 
                                 <x-dropdown-link href="{{ route('logout') }}"
                                          @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Cerrar Sesión') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -158,12 +162,17 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                {{ __('Inicio') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('comics.index') }}" :active="request()->routeIs('comics.index')">
-                {{ __('Cómics') }}
+                {{ __('Catálogo') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('autores.index') }}" :active="request()->routeIs('autores.index')">
-                {{ __('Autores') }}
-            </x-responsive-nav-link>
+            @auth
+                <x-responsive-nav-link href="{{ route('biblioteca.index') }}" :active="request()->routeIs('biblioteca.index')">
+                    {{ __('Tu Biblioteca') }}
+                </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
@@ -184,8 +193,11 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
+                <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
+                    {{ __('Perfil') }}
                 </x-responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -200,7 +212,7 @@
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
                                    @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Cerrar Sesión') }}
                     </x-responsive-nav-link>
                 </form>
 
