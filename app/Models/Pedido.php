@@ -16,7 +16,9 @@ class Pedido extends Model
         'id_usuario',
         'fecha',
         'estado',
-        'metodo_pago'
+        'metodo_pago',
+        'total',
+        'payment_id'
     ];
 
     // Relación con usuario (un pedido pertenece a un usuario)

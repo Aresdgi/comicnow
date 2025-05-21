@@ -29,11 +29,16 @@ Route::get('/buscar', [ComicController::class, 'buscar'])->name('comics.buscar')
 Route::get('/contacto', function () { return view('contacto'); })->name('contacto');
 Route::get('/sobre-nosotros', function () { return view('about'); })->name('about');
 
+// Configuración de Cashier para Stripe
+Route::post('/stripe/webhook', function() {
+    return '';
+})->name('cashier.webhook');
+
 // Rutas para usuarios autenticados
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     // Dashboard principal - redirecciona según el rol
     Route::get('/dashboard', function () {
-        if(auth()->user()->rol === 'admin') {
+        if(auth()->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('user.dashboard');
@@ -50,12 +55,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     // Carrito de compras
     Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
     Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
-    Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+    Route::put('/carrito/actualizar/{id_comic}', [CarritoController::class, 'actualizar'])->name('carrito.update');
+    Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.remove');
     Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
     
-    // Proceso de compra
-    Route::get('/checkout', [PedidoController::class, 'checkout'])->name('pedido.checkout');
-    Route::post('/checkout/procesar', [PedidoController::class, 'procesar'])->name('pedido.procesar');
+    // Cashier checkout
+    Route::get('/checkout', [App\Http\Controllers\CashierController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/process', [App\Http\Controllers\CashierController::class, 'process'])->name('cashier.process');
+    Route::get('/checkout/success/{id_pedido}', [App\Http\Controllers\CashierController::class, 'success'])->name('checkout.success');
     
     // Historial de pedidos
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
