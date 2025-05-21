@@ -2,6 +2,18 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+    
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">{{ $comic->titulo }}</h1>
         <div class="flex space-x-2">
@@ -48,11 +60,28 @@
                     <p class="text-gray-800">{{ $comic->descripcion ?? 'Sin descripción disponible' }}</p>
                 </div>
                 
-                <!-- Botón Añadir movido a la derecha, debajo de la descripción -->
+                <!-- Contenedor para mensajes -->
+                <div id="message-container"></div>
+                
+                <!-- Formulario para añadir al carrito -->
                 <div class="mt-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded text-center" style="background-color: #0052CC; color: white; font-weight: bold; padding: 12px 20px; border-radius: 5px; cursor: pointer; display: inline-block;">
-                        Añadir
-                    </button>
+                    @if($comic->stock > 0)
+                        <form id="add-to-cart-form" action="{{ route('carrito.agregar') }}" method="POST" class="flex items-end space-x-2">
+                            @csrf
+                            <input type="hidden" name="id_comic" value="{{ $comic->id_comic }}">
+                            
+                            <div class="flex flex-col">
+                                <label for="cantidad" class="text-sm text-gray-600 mb-1">Cantidad:</label>
+                                <input type="number" name="cantidad" id="cantidad" value="1" min="1" max="{{ $comic->stock }}" class="border rounded p-2 w-20">
+                            </div>
+                            
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded text-center" style="background-color: #0052CC;">
+                                Añadir al carrito
+                            </button>
+                        </form>
+                    @else
+                        <p class="text-red-600 font-medium">Agotado</p>
+                    @endif
                 </div>
                 
                 @if(isset($resenas) && $resenas->count() > 0)
@@ -90,4 +119,8 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="{{ asset('js/carrito.js') }}"></script>
+@endpush
 @endsection

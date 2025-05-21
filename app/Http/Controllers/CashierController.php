@@ -8,12 +8,14 @@ use App\Models\DetallePedido;
 use App\Models\Comic;
 use App\Services\CashierService;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
 
 class CashierController extends Controller
 {
     /**
-     * Muestra la página de checkout con Cashier
-     */    public function checkout()
+     * Muestra la página de checkout con Stripe Checkout
+     */    
+    public function checkout()
     {
         // Obtener el carrito del usuario
         $user = Auth::user();
@@ -23,30 +25,48 @@ class CashierController extends Controller
             return redirect()->route('carrito.index')->with('error', 'Tu carrito está vacío');
         }
         
-        $items = [];
+        $line_items = [];
         $total = 0;
         
-        // Preparar los items para Stripe
+        // Preparar los items para Stripe Checkout
         foreach ($carrito as $id => $item) {
             $comic = Comic::find($id);
             if ($comic) {
                 $total += $comic->precio * $item['cantidad'];
-                $items[] = [
-                    'comic' => $comic,
-                    'cantidad' => $item['cantidad'],
-                    'precio_unitario' => $comic->precio,
-                    'subtotal' => $comic->precio * $item['cantidad']
+                
+                // Formato para Stripe Checkout
+                $line_items[] = [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => $comic->titulo,
+                            'images' => $comic->imagen && !empty($comic->imagen) ? [url($comic->imagen)] : [],
+                        ],
+                        'unit_amount' => $comic->precio * 100, // En céntimos
+                    ],
+                    'quantity' => $item['cantidad'],
                 ];
             }
         }
         
-        // Crear intención de pago para Stripe
-        $intent = $user->createSetupIntent();
+        // Configurar Stripe
+        Stripe::setApiKey(config('cashier.secret'));
         
-        return view('checkout.index', [
-            'items' => $items,
-            'total' => $total,
-            'intent' => $intent
+        // Crear sesión de Stripe Checkout
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $line_items,
+            'mode' => 'payment',
+            'customer_email' => $user->email,
+            'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('carrito.index'),
+            'metadata' => [
+                'user_id' => $user->id
+            ]
+        ]);
+        
+        return view('checkout.redirect', [
+            'checkout_url' => $checkout_session->url
         ]);
     }
       /**
@@ -54,42 +74,49 @@ class CashierController extends Controller
      */
     public function process(Request $request)
     {
-        $user = Auth::user();
-        $carrito = session()->get('carrito', []);
+        // Este método ya no es necesario con Stripe Checkout
+        // La redirección a success o cancel se maneja automáticamente por Stripe
+        return redirect()->route('carrito.index');
+    }
+      /**
+     * Maneja el retorno exitoso de Stripe Checkout
+     */
+    public function success(Request $request)
+    {
+        $sessionId = $request->get('session_id');
         
-        if (empty($carrito)) {
-            return redirect()->route('carrito.index')->with('error', 'Tu carrito está vacío');
+        if (!$sessionId) {
+            return redirect()->route('carrito.index')
+                ->with('error', 'No se pudo procesar el pago. Sesión de checkout no encontrada.');
         }
         
         try {
-            $paymentMethod = $request->input('payment_method');
+            // Configurar Stripe
+            Stripe::setApiKey(config('cashier.secret'));
             
-            // Usar nuestro servicio para procesar el pedido completo
+            // Recuperar información de la sesión de Stripe
+            $session = \Stripe\Checkout\Session::retrieve($sessionId);
+            
+            // Verificar que la sesión está pagada
+            if ($session->payment_status !== 'paid') {
+                return redirect()->route('carrito.index')
+                    ->with('error', 'El pago no ha sido completado.');
+            }
+            
+            $user = Auth::user();
+            $carrito = session()->get('carrito', []);
+            
+            // Procesar el pedido en la base de datos
             $cashierService = new CashierService();
-            $pedido = $cashierService->procesarPedido($user, $carrito, $paymentMethod);
+            $pedido = $cashierService->procesarPedidoDesdeCheckout($user, $carrito, $session);
             
             // Vaciar carrito
             session()->forget('carrito');
             
-            return redirect()->route('pedidos.show', $pedido->id_pedido)
-                ->with('success', 'Tu pedido ha sido procesado correctamente.');
+            return view('checkout.success', compact('pedido'));
         } catch (\Exception $e) {
-            return redirect()->back()
+            return redirect()->route('carrito.index')
                 ->with('error', 'Ocurrió un error al procesar tu pago: ' . $e->getMessage());
         }
-    }
-      /**
-     * Redirige al usuario a la página de éxito del pedido
-     */
-    public function success($id_pedido)
-    {
-        $pedido = Pedido::with('detalles')->findOrFail($id_pedido);
-        
-        // Verificar que el pedido pertenezca al usuario autenticado
-        if ($pedido->id_usuario != Auth::id()) {
-            return redirect()->route('pedidos.index')->with('error', 'No tienes acceso a este pedido.');
-        }
-        
-        return view('checkout.success', compact('pedido'));
     }
 }

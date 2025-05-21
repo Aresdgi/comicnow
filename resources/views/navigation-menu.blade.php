@@ -22,6 +22,22 @@
                         <x-nav-link href="{{ route('biblioteca.index') }}" :active="request()->routeIs('biblioteca.index')">
                             {{ __('Tu Biblioteca') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('carrito.index') }}" :active="request()->routeIs('carrito.index')">
+                            {{ __('Carrito') }}
+                            @php
+                                $carrito = session('carrito', []);
+                                $cantidad = count($carrito);
+                            @endphp
+                            @if($cantidad > 0)
+                                <span id="cart-badge" class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full ml-2">
+                                    {{ $cantidad }}
+                                </span>
+                            @else
+                                <span id="cart-badge" class="hidden inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full ml-2">
+                                    0
+                                </span>
+                            @endif
+                        </x-nav-link>
                     @endauth
                 </div>
             </div>
@@ -79,6 +95,22 @@
             @auth
                 <x-responsive-nav-link href="{{ route('biblioteca.index') }}" :active="request()->routeIs('biblioteca.index')">
                     {{ __('Tu Biblioteca') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('carrito.index') }}" :active="request()->routeIs('carrito.index')">
+                    {{ __('Carrito') }}
+                    @php
+                        $carrito = session('carrito', []);
+                        $cantidad = count($carrito);
+                    @endphp
+                    @if($cantidad > 0)
+                        <span id="cart-badge-mobile" class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full ml-2">
+                            {{ $cantidad }}
+                        </span>
+                    @else
+                        <span id="cart-badge-mobile" class="hidden inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full ml-2">
+                            0
+                        </span>
+                    @endif
                 </x-responsive-nav-link>
                 <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Perfil') }}

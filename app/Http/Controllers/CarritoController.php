@@ -80,14 +80,12 @@ class CarritoController extends Controller
     /**
      * Actualiza la cantidad de un ítem en el carrito
      */
-    public function actualizar(Request $request)
+    public function actualizar(Request $request, $id_comic)
     {
         $request->validate([
-            'id_comic' => 'required|exists:comics,id_comic',
             'cantidad' => 'required|integer|min:1'
         ]);
         
-        $id_comic = $request->id_comic;
         $cantidad = $request->cantidad;
         
         // Verificar stock disponible
@@ -98,12 +96,12 @@ class CarritoController extends Controller
         }
         
         // Obtener el carrito actual
-        $carrito = Session::get('carrito', []);
+        $carrito = session()->get('carrito', []);
         
         // Actualizar la cantidad si el producto existe en el carrito
         if (isset($carrito[$id_comic])) {
-            $carrito[$id_comic] = $cantidad;
-            Session::put('carrito', $carrito);
+            $carrito[$id_comic]['cantidad'] = $cantidad;
+            session()->put('carrito', $carrito);
             return back()->with('success', 'Cantidad actualizada correctamente.');
         }
         
@@ -118,12 +116,12 @@ class CarritoController extends Controller
         $id_comic = $id;
         
         // Obtener el carrito actual
-        $carrito = Session::get('carrito', []);
+        $carrito = session()->get('carrito', []);
         
         // Eliminar el ítem si existe
         if (isset($carrito[$id_comic])) {
             unset($carrito[$id_comic]);
-            Session::put('carrito', $carrito);
+            session()->put('carrito', $carrito);
             return back()->with('success', 'Producto eliminado del carrito.');
         }
         
@@ -135,7 +133,7 @@ class CarritoController extends Controller
      */
     public function vaciar()
     {
-        Session::forget('carrito');
+        session()->forget('carrito');
         return back()->with('success', 'El carrito ha sido vaciado correctamente.');
     }
 
@@ -149,11 +147,11 @@ class CarritoController extends Controller
             'cantidad' => 'required|integer|min:1'
         ]);
 
-        $id_comic = $request->id_comic;
+        $id = $request->id_comic;
         $cantidad = $request->cantidad;
 
         // Verificar que hay suficiente stock
-        $comic = Comic::find($id_comic);
+        $comic = Comic::find($id);
         if (!$comic || $comic->stock < $cantidad) {
             return response()->json([
                 'success' => false,
@@ -162,28 +160,35 @@ class CarritoController extends Controller
         }
 
         // Obtener el carrito actual
-        $carrito = Session::get('carrito', []);
+        $carrito = session()->get('carrito', []);
 
         // Agregar o actualizar la cantidad en el carrito
-        if (isset($carrito[$id_comic])) {
-            $carrito[$id_comic] += $cantidad;
+        if (isset($carrito[$id])) {
+            $nuevaCantidad = $carrito[$id]['cantidad'] + $cantidad;
+            
+            // Verificar que la nueva cantidad no exceda el stock
+            if ($nuevaCantidad > $comic->stock) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La cantidad total excedería el stock disponible.'
+                ]);
+            }
+            
+            $carrito[$id]['cantidad'] = $nuevaCantidad;
         } else {
-            $carrito[$id_comic] = $cantidad;
-        }
-
-        // Verificar nuevamente el stock total
-        if ($comic->stock < $carrito[$id_comic]) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No hay suficiente stock disponible para la cantidad solicitada.'
-            ]);
+            $carrito[$id] = [
+                'titulo' => $comic->titulo,
+                'precio' => $comic->precio,
+                'cantidad' => $cantidad,
+                'imagen' => $comic->imagen
+            ];
         }
 
         // Guardar el carrito en la sesión
-        Session::put('carrito', $carrito);
+        session()->put('carrito', $carrito);
 
         // Obtener el total de items en el carrito
-        $totalItems = array_sum($carrito);
+        $totalItems = count($carrito);
 
         return response()->json([
             'success' => true,

@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Cashier\Billable;
 
 class Usuario extends Authenticatable
 {
@@ -16,6 +17,7 @@ class Usuario extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasProfilePhoto;
+    use Billable;
 
     protected $table = 'usuarios';
     protected $primaryKey = 'id_usuario';
@@ -98,6 +100,16 @@ class Usuario extends Authenticatable
     public function resenas()
     {
         return $this->hasMany(Resena::class, 'id_usuario');
+    }
+    
+    /**
+     * Determina si el usuario es administrador.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->rol === 'admin' || $this->rol === 'administrador';
     }
 
     // Relación con biblioteca (un usuario puede tener muchos comics en su biblioteca)

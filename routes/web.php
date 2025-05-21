@@ -30,9 +30,7 @@ Route::get('/contacto', function () { return view('contacto'); })->name('contact
 Route::get('/sobre-nosotros', function () { return view('about'); })->name('about');
 
 // Configuración de Cashier para Stripe
-Route::post('/stripe/webhook', function() {
-    return '';
-})->name('cashier.webhook');
+Route::post('/stripe/webhook', [\Laravel\Cashier\Http\Controllers\WebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
 // Rutas para usuarios autenticados
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -62,7 +60,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     // Cashier checkout
     Route::get('/checkout', [App\Http\Controllers\CashierController::class, 'checkout'])->name('checkout');
     Route::post('/checkout/process', [App\Http\Controllers\CashierController::class, 'process'])->name('cashier.process');
-    Route::get('/checkout/success/{id_pedido}', [App\Http\Controllers\CashierController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/success', [App\Http\Controllers\CashierController::class, 'success'])->name('checkout.success');
     
     // Historial de pedidos
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
