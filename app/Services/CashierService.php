@@ -91,13 +91,25 @@ class CashierService
                 $detalle->precio = $comic->precio;
                 $detalle->save();
                 
-                // Añadir a la biblioteca del usuario
-                $biblioteca = new Biblioteca();
-                $biblioteca->id_usuario = $user->id_usuario;
-                $biblioteca->id_comic = $id;
-                $biblioteca->progreso_lectura = 0;
-                $biblioteca->ultimo_marcador = 0;
-                $biblioteca->save();
+                // Verificar si el cómic ya existe en la biblioteca del usuario
+                $existeEnBiblioteca = Biblioteca::where('id_usuario', $user->id_usuario)
+                                           ->where('id_comic', $id)
+                                           ->exists();
+                
+                // Solo añadir a biblioteca si no existe
+                if (!$existeEnBiblioteca) {
+                    $biblioteca = new Biblioteca();
+                    $biblioteca->id_usuario = $user->id_usuario;
+                    $biblioteca->id_comic = $id;
+                    $biblioteca->progreso_lectura = 0;
+                    $biblioteca->ultimo_marcador = 0;
+                    $biblioteca->save();
+                } else {
+                    Log::info('Cómic ya existente en biblioteca', [
+                        'user_id' => $user->id_usuario,
+                        'comic_id' => $id
+                    ]);
+                }
                 
                 // Actualizar stock del cómic
                 $comic->stock -= $item['cantidad'];
@@ -149,13 +161,25 @@ class CashierService
                 $detalle->precio = $comic->precio;
                 $detalle->save();
                 
-                // Añadir a la biblioteca del usuario
-                $biblioteca = new Biblioteca();
-                $biblioteca->id_usuario = $user->id_usuario;
-                $biblioteca->id_comic = $id;
-                $biblioteca->progreso_lectura = 0;
-                $biblioteca->ultimo_marcador = 0;
-                $biblioteca->save();
+                // Verificar si el cómic ya existe en la biblioteca del usuario
+                $existeEnBiblioteca = Biblioteca::where('id_usuario', $user->id_usuario)
+                                           ->where('id_comic', $id)
+                                           ->exists();
+                
+                // Solo añadir a biblioteca si no existe
+                if (!$existeEnBiblioteca) {
+                    $biblioteca = new Biblioteca();
+                    $biblioteca->id_usuario = $user->id_usuario;
+                    $biblioteca->id_comic = $id;
+                    $biblioteca->progreso_lectura = 0;
+                    $biblioteca->ultimo_marcador = 0;
+                    $biblioteca->save();
+                } else {
+                    Log::info('Cómic ya existente en biblioteca', [
+                        'user_id' => $user->id_usuario,
+                        'comic_id' => $id
+                    ]);
+                }
                 
                 // Actualizar stock del cómic
                 $comic->stock -= $item['cantidad'];

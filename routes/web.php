@@ -48,7 +48,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     
     // Biblioteca del usuario
     Route::get('/biblioteca', [BibliotecaController::class, 'index'])->name('biblioteca.index');
-    Route::get('/biblioteca/{id}', [BibliotecaController::class, 'leer'])->name('biblioteca.leer');
+    Route::get('/biblioteca/{id_comic}', [BibliotecaController::class, 'leer'])->name('biblioteca.leer');
+    Route::post('/biblioteca/actualizar/{id_comic}', [BibliotecaController::class, 'actualizarProgreso'])->name('biblioteca.actualizar');
+    Route::delete('/biblioteca/{id_comic}', [BibliotecaController::class, 'destroy'])->name('biblioteca.eliminar');
     
     // Carrito de compras
     Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');

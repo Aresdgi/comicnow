@@ -6,20 +6,21 @@ use App\Models\Biblioteca;
 use App\Models\Comic;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BibliotecaController extends Controller
 {
     /**
      * Muestra la biblioteca del usuario autenticado.
      */
-    public function index($id_usuario)
+    public function index()
     {
-        $usuario = Usuario::findOrFail($id_usuario);
-        $biblioteca = Biblioteca::where('id_usuario', $id_usuario)
+        $usuario = Auth::user();
+        $biblioteca = Biblioteca::where('id_usuario', $usuario->id_usuario)
                               ->with('comic')
                               ->get();
                               
-        return view('biblioteca.index', compact('biblioteca', 'usuario'));
+        return view('bibliotecas.index', compact('biblioteca', 'usuario'));
     }
 
     /**
@@ -27,13 +28,14 @@ class BibliotecaController extends Controller
      */
     public function store(Request $request)
     {
+        $usuario = Auth::user();
+        
         $request->validate([
-            'id_usuario' => 'required|exists:usuarios,id_usuario',
             'id_comic' => 'required|exists:comics,id_comic',
         ]);
 
         // Verificar si el comic ya está en la biblioteca
-        $existente = Biblioteca::where('id_usuario', $request->id_usuario)
+        $existente = Biblioteca::where('id_usuario', $usuario->id_usuario)
                              ->where('id_comic', $request->id_comic)
                              ->first();
 
@@ -44,41 +46,43 @@ class BibliotecaController extends Controller
         }
 
         Biblioteca::create([
-            'id_usuario' => $request->id_usuario,
+            'id_usuario' => $usuario->id_usuario,
             'id_comic' => $request->id_comic,
             'progreso_lectura' => 0.00,
-            'ultimo_marcador' => '',
+            'ultimo_marcador' => 0,
         ]);
 
-        return redirect()->route('biblioteca.index', ['id_usuario' => $request->id_usuario])
+        return redirect()->route('biblioteca.index')
             ->with('success', 'Comic añadido a tu biblioteca');
     }
 
     /**
      * Muestra la vista de lectura de un comic.
      */
-    public function leer($id_usuario, $id_comic)
+    public function leer($id_comic)
     {
-        $entrada = Biblioteca::where('id_usuario', $id_usuario)
+        $usuario = Auth::user();
+        $entrada = Biblioteca::where('id_usuario', $usuario->id_usuario)
                            ->where('id_comic', $id_comic)
                            ->firstOrFail();
         
         $comic = Comic::findOrFail($id_comic);
         
-        return view('biblioteca.leer', compact('entrada', 'comic'));
+        return view('bibliotecas.leer', compact('entrada', 'comic'));
     }
 
     /**
      * Actualiza el progreso de lectura de un comic.
      */
-    public function actualizarProgreso(Request $request, $id_usuario, $id_comic)
+    public function actualizarProgreso(Request $request, $id_comic)
     {
+        $usuario = Auth::user();
         $request->validate([
             'progreso_lectura' => 'required|numeric|min:0|max:100',
-            'ultimo_marcador' => 'required|string',
+            'ultimo_marcador' => 'required|numeric|min:0',
         ]);
 
-        $entrada = Biblioteca::where('id_usuario', $id_usuario)
+        $entrada = Biblioteca::where('id_usuario', $usuario->id_usuario)
                            ->where('id_comic', $id_comic)
                            ->firstOrFail();
         
@@ -96,15 +100,16 @@ class BibliotecaController extends Controller
     /**
      * Elimina un comic de la biblioteca del usuario.
      */
-    public function destroy($id_usuario, $id_comic)
+    public function destroy($id_comic)
     {
-        $entrada = Biblioteca::where('id_usuario', $id_usuario)
+        $usuario = Auth::user();
+        $entrada = Biblioteca::where('id_usuario', $usuario->id_usuario)
                            ->where('id_comic', $id_comic)
                            ->firstOrFail();
         
         $entrada->delete();
 
-        return redirect()->route('biblioteca.index', ['id_usuario' => $id_usuario])
+        return redirect()->route('biblioteca.index')
             ->with('success', 'Comic eliminado de tu biblioteca');
     }
 }
