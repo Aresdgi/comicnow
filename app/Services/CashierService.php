@@ -88,7 +88,7 @@ class CashierService
                 $detalle->id_pedido = $pedido->id_pedido; 
                 $detalle->id_comic = $id;
                 $detalle->cantidad = $item['cantidad'];
-                $detalle->precio_unitario = $comic->precio;
+                $detalle->precio = $comic->precio;
                 $detalle->save();
                 
                 // Añadir a la biblioteca del usuario
@@ -96,6 +96,7 @@ class CashierService
                 $biblioteca->id_usuario = $user->id_usuario;
                 $biblioteca->id_comic = $id;
                 $biblioteca->progreso_lectura = 0;
+                $biblioteca->ultimo_marcador = 0;
                 $biblioteca->save();
                 
                 // Actualizar stock del cómic
@@ -128,7 +129,7 @@ class CashierService
         
         // Crear el pedido
         $pedido = new Pedido();
-        $pedido->id_usuario = $user->id;
+        $pedido->id_usuario = $user->id_usuario;
         $pedido->fecha = now();
         $pedido->estado = 'pagado';
         $pedido->metodo_pago = 'stripe_checkout';
@@ -145,14 +146,15 @@ class CashierService
                 $detalle->id_pedido = $pedido->id_pedido; 
                 $detalle->id_comic = $id;
                 $detalle->cantidad = $item['cantidad'];
-                $detalle->precio_unitario = $comic->precio;
+                $detalle->precio = $comic->precio;
                 $detalle->save();
                 
                 // Añadir a la biblioteca del usuario
                 $biblioteca = new Biblioteca();
-                $biblioteca->id_usuario = $user->id;
+                $biblioteca->id_usuario = $user->id_usuario;
                 $biblioteca->id_comic = $id;
                 $biblioteca->progreso_lectura = 0;
+                $biblioteca->ultimo_marcador = 0;
                 $biblioteca->save();
                 
                 // Actualizar stock del cómic
@@ -162,7 +164,7 @@ class CashierService
         }
         
         Log::info('Pedido procesado desde Stripe Checkout', [
-            'user_id' => $user->id,
+            'user_id' => $user->id_usuario,
             'total' => $total,
             'session_id' => $session->id
         ]);
