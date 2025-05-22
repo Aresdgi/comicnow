@@ -49,66 +49,226 @@
             </div>
         </div>
         
-        <!-- Área de visualización del cómic (placeholder para PDF.js) -->
+        <!-- Visor PDF con PDF.js -->
         <div class="p-6 border-t border-gray-200">
-            <h3 class="text-xl font-semibold mb-4">Vista previa del cómic</h3>
+            <h3 class="text-xl font-semibold mb-4">Lector de cómics</h3>
             
-            <div class="bg-gray-100 p-8 rounded-lg text-center">
-                <div class="bg-white p-8 rounded shadow-inner mx-auto max-w-3xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <h4 class="text-xl font-semibold mb-2">Visor de cómics en desarrollo</h4>
-                    <p class="text-gray-600 mb-6">El visor de cómics estará disponible próximamente con PDF.js</p>
-                    
-                    <p class="text-gray-700 mb-4">Mientras tanto, puedes disfrutar de este cómic en formato digital.</p>
-                    
-                    <!-- Simulación de páginas del cómic -->
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        @for ($i = 1; $i <= 4; $i++)
-                            <div class="bg-gray-200 rounded h-32 flex items-center justify-center">
-                                <span class="text-gray-500">Página {{ $i }} (Demo)</span>
-                            </div>
-                        @endfor
+            <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex space-x-2">
+                        <button id="prev" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button id="next" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
                     </div>
-                    
-                    <button id="actualizar-progreso" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                        Actualizar progreso al 25%
-                    </button>
+
+                    <div>
+                        <span>Página: <span id="page_num"></span> / <span id="page_count"></span></span>
+                    </div>
+
+                    <div>
+                        <button id="zoom_in" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button id="zoom_out" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+                <div class="bg-white shadow-inner rounded-lg p-2 flex items-center justify-center">
+                    <canvas id="pdf-canvas" class="max-w-full"></canvas>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="actualizar-progreso" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
+                    Guardar progreso de lectura
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Importar PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const btnActualizar = document.getElementById('actualizar-progreso');
-    
-    btnActualizar.addEventListener('click', function() {
-        // Simular actualización de progreso
-        fetch('{{ route("biblioteca.actualizar", $comic->id_comic) }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                progreso_lectura: 25,
-                ultimo_marcador: 1
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('¡Progreso actualizado!');
-                location.reload();
+    // Configurar worker de PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables para el visor PDF
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        const scale = 1.5;
+        const canvas = document.getElementById('pdf-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Ruta al archivo PDF del cómic
+        const pdfUrl = '{{ asset("storage/".$comic->archivo_comic) }}';
+
+        /**
+         * Renderizar la página especificada del PDF
+         */
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Obtener la página
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({scale: scale});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Renderizar PDF page en el canvas
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+
+                // Esperar a que la página termine de renderizarse
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    // Actualizar números de página
+                    document.getElementById('page_num').textContent = num;
+                    
+                    // Calcular progreso de lectura aproximado
+                    const progreso = Math.round((num / pdfDoc.numPages) * 100);
+                    
+                    if (pageNumPending !== null) {
+                        // Si hay una página pendiente, renderizarla
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+        }
+
+        /**
+         * Si otra página está en proceso de renderizado, poner en cola la nueva página;
+         * de lo contrario, renderizar la página inmediatamente.
+         */
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
             }
-        })
-        .catch(error => {
-            console.error('Error al actualizar el progreso:', error);
+        }
+
+        /**
+         * Mostrar página anterior
+         */
+        function onPrevPage() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('prev').addEventListener('click', onPrevPage);
+
+        /**
+         * Mostrar página siguiente
+         */
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('next').addEventListener('click', onNextPage);
+
+        /**
+         * Zoom in
+         */
+        function zoomIn() {
+            scale *= 1.2;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('zoom_in').addEventListener('click', zoomIn);
+
+        /**
+         * Zoom out
+         */
+        function zoomOut() {
+            scale /= 1.2;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('zoom_out').addEventListener('click', zoomOut);
+
+        // Cargar PDF
+        pdfjsLib.getDocument(pdfUrl).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+            
+            // Iniciar con la primera página
+            renderPage(pageNum);
+        }).catch(function(error) {
+            // Manejar error de carga
+            console.error('Error al cargar el PDF:', error);
+            const canvas = document.getElementById('pdf-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.height = 400;
+            canvas.width = 600;
+            
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = '24px Arial';
+            ctx.fillStyle = 'red';
+            ctx.textAlign = 'center';
+            ctx.fillText('Error al cargar el PDF', canvas.width / 2, canvas.height / 2);
+            
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#666';
+            ctx.fillText('Por favor, asegúrate de que el archivo exista', canvas.width / 2, (canvas.height / 2) + 30);
+        });
+
+        // Botón para actualizar progreso
+        const btnActualizar = document.getElementById('actualizar-progreso');
+        
+        btnActualizar.addEventListener('click', function() {
+            // Calcular progreso basado en la página actual
+            const progreso = Math.round((pageNum / pdfDoc.numPages) * 100);
+            
+            // Guardar progreso
+            fetch('{{ route("biblioteca.actualizar", $comic->id_comic) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    progreso_lectura: progreso,
+                    ultimo_marcador: pageNum
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('¡Progreso actualizado!');
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar el progreso:', error);
+            });
         });
     });
-});
 </script>
 @endsection 
