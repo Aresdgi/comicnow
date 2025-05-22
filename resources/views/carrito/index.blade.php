@@ -24,9 +24,6 @@
                             <thead>
                                 <tr>
                                     <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Imagen
-                                    </th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Cómic
                                     </th>
                                     <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -46,15 +43,6 @@
                             <tbody>
                                 @foreach($carrito as $id => $item)
                                 <tr>
-                                    <td class="py-3 px-4 border-b border-gray-200">
-                                        @if(isset($item['imagen']))
-                                            <img src="{{ asset('storage/' . $item['imagen']) }}" alt="{{ $item['titulo'] }}" class="w-16 h-24 object-cover">
-                                        @else
-                                            <div class="w-16 h-24 bg-gray-200 flex items-center justify-center">
-                                                <span class="text-gray-500">Sin imagen</span>
-                                            </div>
-                                        @endif
-                                    </td>
                                     <td class="py-3 px-4 border-b border-gray-200">
                                         {{ $item['titulo'] }}
                                     </td>
@@ -88,7 +76,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" class="py-3 px-4 text-right font-bold">
+                                    <td colspan="2" class="py-3 px-4 text-right font-bold">
                                         Total:
                                     </td>
                                     <td class="py-3 px-4 font-bold">

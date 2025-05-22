@@ -130,7 +130,7 @@ class ComicController extends Controller
     public function destroy(Comic $comic)
     {
         // Comprobar si hay reseñas, pedidos o biblioteca relacionados antes de eliminar
-        if ($comic->resenas()->count() > 0 || $comic->detallePedidos()->count() > 0 || $comic->biblioteca()->count() > 0) {
+        if ($comic->resenas()->count() > 0 || $comic->detallePedidos()->count() > 0 || $comic->bibliotecas()->count() > 0) {
             return back()->with('error', 'No se puede eliminar el comic porque tiene reseñas, pedidos o está en bibliotecas de usuarios');
         }
         
