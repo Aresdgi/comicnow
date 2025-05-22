@@ -51,12 +51,20 @@
         
         <!-- Visor PDF con iframe -->
         <div class="p-6 border-t border-gray-200">
-            <h3 class="text-xl font-semibold mb-4">Lector de cómics</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Lector de cómics</h3>
+                <button id="fullscreen-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
+                    </svg>
+                    Ver a pantalla completa
+                </button>
+            </div>
             
             <!-- Usando iframe para mostrar el PDF con el visor nativo del navegador -->
             <div class="bg-gray-100 p-4 rounded-lg mb-4">
                 <div style="position: relative; padding-bottom: 100%; height: 0; overflow: hidden;">
-                    <iframe src="{{ asset('storage/'.$comic->archivo_comic) }}" 
+                    <iframe id="pdf-iframe" src="{{ asset('storage/'.$comic->archivo_comic) }}" 
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
                             frameborder="0" 
                             allowfullscreen></iframe>
@@ -74,6 +82,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Botón de pantalla completa
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        fullscreenBtn.addEventListener('click', function() {
+            // Abrir el PDF en una nueva ventana a pantalla completa
+            window.open("{{ asset('storage/'.$comic->archivo_comic) }}", "_blank", "fullscreen=yes,toolbar=yes");
+        });
+
+        // Botón para actualizar progreso
         const btnActualizar = document.getElementById('actualizar-progreso');
         
         btnActualizar.addEventListener('click', function() {
