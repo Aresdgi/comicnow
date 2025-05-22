@@ -80,11 +80,11 @@
                 
                 <!-- Archivo del Cómic -->
                 <div class="md:col-span-2">
-                    <label for="archivo_url" class="block text-sm font-medium text-gray-700 mb-1">Archivo del Cómic</label>
-                    <input type="file" name="archivo_url" id="archivo_url" accept=".pdf,.cbz,.cbr"
+                    <label for="archivo_comic" class="block text-sm font-medium text-gray-700 mb-1">Archivo del Cómic</label>
+                    <input type="file" name="archivo_comic" id="archivo_comic" accept=".pdf,.cbz,.cbr"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     <p class="text-sm text-gray-500 mt-1">Formatos permitidos: PDF, CBZ, CBR. Tamaño máximo: 20MB</p>
-                    @error('archivo_url')
+                    @error('archivo_comic')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

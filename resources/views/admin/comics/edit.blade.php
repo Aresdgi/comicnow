@@ -94,7 +94,7 @@
                 <!-- Archivo Actual -->
                 <div class="md:col-span-2">
                     <p class="block text-sm font-medium text-gray-700 mb-1">Archivo Actual</p>
-                    @if($comic->archivo_url)
+                    @if($comic->archivo_comic)
                     <p class="text-gray-700">
                         <svg class="inline-block h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -108,11 +108,11 @@
                 
                 <!-- Nuevo Archivo -->
                 <div class="md:col-span-2">
-                    <label for="archivo_url" class="block text-sm font-medium text-gray-700 mb-1">Nuevo Archivo del Cómic</label>
-                    <input type="file" name="archivo_url" id="archivo_url" accept=".pdf,.cbz,.cbr"
+                    <label for="archivo_comic" class="block text-sm font-medium text-gray-700 mb-1">Nuevo Archivo del Cómic</label>
+                    <input type="file" name="archivo_comic" id="archivo_comic" accept=".pdf,.cbz,.cbr"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     <p class="text-sm text-gray-500 mt-1">Formatos permitidos: PDF, CBZ, CBR. Tamaño máximo: 20MB. Deja en blanco para mantener el archivo actual.</p>
-                    @error('archivo_url')
+                    @error('archivo_comic')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

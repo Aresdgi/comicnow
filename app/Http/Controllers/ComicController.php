@@ -42,7 +42,7 @@ class ComicController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $data = $request->all();
@@ -54,9 +54,9 @@ class ComicController extends Controller
         }
 
         // Manejar el archivo del comic
-        if ($request->hasFile('archivo_url')) {
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
-            $data['archivo_url'] = $archivoPath;
+        if ($request->hasFile('archivo_comic')) {
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
+            $data['archivo_comic'] = $archivoPath;
         }
 
         Comic::create($data);
@@ -68,18 +68,15 @@ class ComicController extends Controller
     /**
      * Muestra el comic especificado.
      */
-    public function show($id)
+    public function show(Comic $comic)
     {
-        $comic = Comic::with('autor')->findOrFail($id);
-        $resenas = Resena::where('id_comic', $comic->id_comic)
-                       ->with('usuario')
-                       ->latest('fecha')
-                       ->take(10)
-                       ->get();
+        // Cargar reseñas del comic
+        $comic->load('resenas.usuario');
         
-        $valoracionPromedio = $resenas->avg('valoracion');
+        // Calcular promedio de calificaciones
+        $calificacionPromedio = $comic->resenas->avg('calificacion');
         
-        return view('comics.show', compact('comic', 'resenas', 'valoracionPromedio'));
+        return view('comics.show', compact('comic', 'calificacionPromedio'));
     }
 
     /**
@@ -105,7 +102,7 @@ class ComicController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $data = $request->all();
@@ -121,13 +118,13 @@ class ComicController extends Controller
         }
 
         // Manejar el archivo del comic
-        if ($request->hasFile('archivo_url')) {
+        if ($request->hasFile('archivo_comic')) {
             // Eliminar el archivo anterior si existe
-            if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
-                Storage::disk('public')->delete($comic->archivo_url);
+            if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+                Storage::disk('public')->delete($comic->archivo_comic);
             }
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
-            $data['archivo_url'] = $archivoPath;
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
+            $data['archivo_comic'] = $archivoPath;
         }
 
         $comic->update($data);
@@ -141,9 +138,9 @@ class ComicController extends Controller
      */
     public function destroy(Comic $comic)
     {
-        // Comprobar si hay reseñas, pedidos o biblioteca relacionados antes de eliminar
-        if ($comic->resenas()->count() > 0 || $comic->detallePedidos()->count() > 0 || $comic->biblioteca()->count() > 0) {
-            return back()->with('error', 'No se puede eliminar el comic porque tiene reseñas, pedidos o está en bibliotecas de usuarios');
+        // Verificar si el cómic puede ser eliminado
+        if ($comic->detallesPedido()->count() > 0 || $comic->bibliotecas()->count() > 0) {
+            return back()->with('error', 'No se puede eliminar este cómic porque tiene pedidos o está en bibliotecas de usuarios.');
         }
         
         // Eliminar archivos asociados
@@ -151,14 +148,17 @@ class ComicController extends Controller
             Storage::disk('public')->delete($comic->portada_url);
         }
         
-        if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
-            Storage::disk('public')->delete($comic->archivo_url);
+        if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+            Storage::disk('public')->delete($comic->archivo_comic);
         }
         
+        // Eliminar reseñas asociadas
+        $comic->resenas()->delete();
+        
+        // Finalmente eliminar el cómic
         $comic->delete();
-
-        return redirect()->route('comics.index')
-            ->with('success', 'Comic eliminado exitosamente');
+        
+        return redirect()->route('comics.index')->with('success', 'Cómic eliminado exitosamente.');
     }
     
     /**

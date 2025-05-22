@@ -226,7 +226,7 @@ class AdminController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $comic = Comic::findOrFail($id);
@@ -249,12 +249,12 @@ class AdminController extends Controller
         }
 
         // Manejar el archivo si se sube uno nuevo
-        if ($request->hasFile('archivo_url')) {
+        if ($request->hasFile('archivo_comic')) {
             // Eliminar el archivo anterior si existe
             if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
                 Storage::disk('public')->delete($comic->archivo_comic);
             }
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
             $comic->archivo_comic = $archivoPath;
         }
 
@@ -284,8 +284,8 @@ class AdminController extends Controller
             Storage::disk('public')->delete($comic->portada_url);
         }
         
-        if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
-            Storage::disk('public')->delete($comic->archivo_url);
+        if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+            Storage::disk('public')->delete($comic->archivo_comic);
         }
         
         $comic->delete();
@@ -335,7 +335,7 @@ class AdminController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $comic = new Comic();
@@ -352,8 +352,8 @@ class AdminController extends Controller
         }
 
         // Manejar el archivo del cómic
-        if ($request->hasFile('archivo_url')) {
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
+        if ($request->hasFile('archivo_comic')) {
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
             $comic->archivo_comic = $archivoPath;
         }
 

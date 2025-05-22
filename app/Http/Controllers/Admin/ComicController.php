@@ -40,7 +40,7 @@ class ComicController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $data = $request->all();
@@ -52,9 +52,9 @@ class ComicController extends Controller
         }
 
         // Manejar el archivo del comic
-        if ($request->hasFile('archivo_url')) {
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
-            $data['archivo_url'] = $archivoPath;
+        if ($request->hasFile('archivo_comic')) {
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
+            $data['archivo_comic'] = $archivoPath;
         }
 
         Comic::create($data);
@@ -93,7 +93,7 @@ class ComicController extends Controller
             'precio' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'portada_url' => 'nullable|image|max:2048',
-            'archivo_url' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
+            'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
         $data = $request->all();
@@ -109,13 +109,13 @@ class ComicController extends Controller
         }
 
         // Manejar el archivo del comic
-        if ($request->hasFile('archivo_url')) {
+        if ($request->hasFile('archivo_comic')) {
             // Eliminar el archivo anterior si existe
-            if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
-                Storage::disk('public')->delete($comic->archivo_url);
+            if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+                Storage::disk('public')->delete($comic->archivo_comic);
             }
-            $archivoPath = $request->file('archivo_url')->store('comics', 'public');
-            $data['archivo_url'] = $archivoPath;
+            $archivoPath = $request->file('archivo_comic')->store('comics', 'public');
+            $data['archivo_comic'] = $archivoPath;
         }
 
         $comic->update($data);
@@ -139,8 +139,8 @@ class ComicController extends Controller
             Storage::disk('public')->delete($comic->portada_url);
         }
         
-        if ($comic->archivo_url && Storage::disk('public')->exists($comic->archivo_url)) {
-            Storage::disk('public')->delete($comic->archivo_url);
+        if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
+            Storage::disk('public')->delete($comic->archivo_comic);
         }
         
         $comic->delete();
