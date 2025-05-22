@@ -22,7 +22,7 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 Route::get('/comics', [ComicController::class, 'index'])->name('comics.index');
-Route::get('/comics/{id}', [ComicController::class, 'show'])->name('comics.show');
+Route::get('/comics/{comic}', [ComicController::class, 'show'])->name('comics.show');
 Route::get('/autores', [AutorController::class, 'index'])->name('autores.index');
 Route::get('/autores/{id}', [AutorController::class, 'show'])->name('autores.show');
 Route::get('/buscar', [ComicController::class, 'buscar'])->name('comics.buscar');

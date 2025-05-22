@@ -74,7 +74,7 @@ class ComicController extends Controller
         $comic->load('resenas.usuario');
         
         // Calcular promedio de calificaciones
-        $calificacionPromedio = $comic->resenas->avg('calificacion');
+        $calificacionPromedio = $comic->resenas->avg('valoracion');
         
         return view('comics.show', compact('comic', 'calificacionPromedio'));
     }

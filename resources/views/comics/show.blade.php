@@ -29,7 +29,7 @@
             <div class="md:w-1/3 p-6 border-r">
                 <div class="mb-6">
                     @if($comic->portada_url)
-                    <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="comic-detail-image rounded-lg shadow-lg">
+                    <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="comic-detail-image rounded-lg shadow-lg w-full h-auto">
                     @else
                     <div class="bg-gray-200 h-64 w-full flex items-center justify-center rounded-lg">
                         <p class="text-gray-500">Sin imagen</p>
@@ -84,15 +84,15 @@
                     @endif
                 </div>
                 
-                @if(isset($resenas) && $resenas->count() > 0)
+                @if($comic->resenas && $comic->resenas->count() > 0)
                 <div class="mt-8">
-                    <h3 class="text-lg font-semibold mb-4">Reseñas ({{ $resenas->count() }})</h3>
+                    <h3 class="text-lg font-semibold mb-4">Reseñas ({{ $comic->resenas->count() }})</h3>
                     <div class="space-y-4">
-                        @foreach($resenas as $resena)
+                        @foreach($comic->resenas as $resena)
                         <div class="bg-gray-50 p-4 rounded-md">
                             <div class="flex justify-between">
                                 <p class="font-medium">{{ $resena->usuario->name ?? 'Usuario anónimo' }}</p>
-                                <p class="text-sm text-gray-600">{{ $resena->fecha }}</p>
+                                <p class="text-sm text-gray-600">{{ $resena->fecha ?? $resena->created_at->format('d/m/Y') }}</p>
                             </div>
                             <div class="mt-1">
                                 <div class="flex items-center">
