@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Biblioteca;
 use App\Models\Comic;
 use App\Models\Usuario;
+use App\Models\Resena;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,9 +67,18 @@ class BibliotecaController extends Controller
                            ->where('id_comic', $id_comic)
                            ->firstOrFail();
         
-        $comic = Comic::findOrFail($id_comic);
+        $comic = Comic::with(['resenas.usuario', 'autor'])->findOrFail($id_comic);
         
-        return view('bibliotecas.leer', compact('entrada', 'comic'));
+        // Verificar si el usuario ya ha reseñado este cómic
+        $resenaUsuario = Resena::where('id_usuario', $usuario->id_usuario)
+                              ->where('id_comic', $id_comic)
+                              ->first();
+        
+        // Calcular promedio de valoraciones
+        $promedioValoracion = $comic->resenas->avg('valoracion');
+        $totalResenas = $comic->resenas->count();
+        
+        return view('bibliotecas.leer', compact('entrada', 'comic', 'resenaUsuario', 'promedioValoracion', 'totalResenas'));
     }
 
     /**
