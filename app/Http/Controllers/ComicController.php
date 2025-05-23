@@ -40,7 +40,7 @@ class ComicController extends Controller
             'descripcion' => 'required|string',
             'genero' => 'required|string|max:100',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'categoria' => 'required|string|max:100',
             'portada_url' => 'nullable|image|max:2048',
             'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
@@ -100,7 +100,7 @@ class ComicController extends Controller
             'descripcion' => 'required|string',
             'genero' => 'required|string|max:100',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'categoria' => 'required|string|max:100',
             'portada_url' => 'nullable|image|max:2048',
             'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);

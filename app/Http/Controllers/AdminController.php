@@ -52,7 +52,6 @@ class AdminController extends Controller
             'total_pedidos' => Pedido::count(),
             'ingresos' => Pedido::where('estado', 'completado')->sum('total'),
             'pedidos_pendientes' => Pedido::where('estado', 'pendiente')->count(),
-            'comics_sin_stock' => Comic::where('stock', 0)->count(),
             'resenas_nuevas' => Resena::orderBy('created_at', 'desc')->take(5)->get()
         ];
         
@@ -118,7 +117,7 @@ class AdminController extends Controller
         $pedido->estado = $request->estado;
         $pedido->save();
         
-        // Ya no es necesario devolver stock, pues no existe el campo
+        
         
         return redirect()->back()->with('success', 'Estado del pedido actualizado correctamente.');
     }
@@ -326,7 +325,7 @@ class AdminController extends Controller
             'id_autor' => 'required|exists:autores,id_autor',
             'descripcion' => 'required|string',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'categoria' => 'required|string|max:100',
             'portada_url' => 'nullable|image|max:2048',
             'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
@@ -336,7 +335,7 @@ class AdminController extends Controller
         $comic->id_autor = $request->id_autor;
         $comic->descripcion = $request->descripcion;
         $comic->precio = $request->precio;
-        $comic->stock = $request->stock;
+        $comic->categoria = $request->categoria;
 
         // Manejar la imagen de portada
         if ($request->hasFile('portada_url')) {

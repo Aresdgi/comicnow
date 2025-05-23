@@ -20,7 +20,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/spiderman1.jpg',
                 'archivo_comic' => 'spiderman1.pdf',
                 'precio' => 9.99,
-                'stock' => 100,
+                'categoria' => 'superheroes',
                 'id_autor' => 1 // Stan Lee
             ],
             [
@@ -29,7 +29,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/watchmen.jpg',
                 'archivo_comic' => 'watchmen.pdf',
                 'precio' => 14.99,
-                'stock' => 75,
+                'categoria' => 'superheroes',
                 'id_autor' => 2 // Alan Moore
             ],
             [
@@ -38,7 +38,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/sincity.jpg',
                 'archivo_comic' => 'sincity.pdf',
                 'precio' => 12.99,
-                'stock' => 50,
+                'categoria' => 'noir',
                 'id_autor' => 3 // Frank Miller
             ],
             [
@@ -47,7 +47,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/sandman.jpg',
                 'archivo_comic' => 'sandman.pdf',
                 'precio' => 15.99,
-                'stock' => 60,
+                'categoria' => 'fantasia',
                 'id_autor' => 4 // Neil Gaiman
             ],
             [
@@ -56,7 +56,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/mafalda.jpg',
                 'archivo_comic' => 'mafalda.pdf',
                 'precio' => 18.99,
-                'stock' => 40,
+                'categoria' => 'humor',
                 'id_autor' => 5 // Quino
             ],
             [
@@ -65,7 +65,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/darkknight.jpg',
                 'archivo_comic' => 'darkknight.pdf',
                 'precio' => 13.99,
-                'stock' => 45,
+                'categoria' => 'superheroes',
                 'id_autor' => 3 // Frank Miller
             ],
             [
@@ -74,7 +74,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/vendetta.jpg',
                 'archivo_comic' => 'vendetta.pdf',
                 'precio' => 11.99,
-                'stock' => 35,
+                'categoria' => 'politico',
                 'id_autor' => 2 // Alan Moore
             ],
             [
@@ -83,7 +83,7 @@ class ComicSeeder extends Seeder
                 'portada_url' => 'https://example.com/avengers.jpg',
                 'archivo_comic' => 'avengers.pdf',
                 'precio' => 8.99,
-                'stock' => 80,
+                'categoria' => 'superheroes',
                 'id_autor' => 1 // Stan Lee
             ]
         ];
