@@ -46,26 +46,32 @@
                     <!-- Login/Register Links -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         @auth
-                            <div class="flex space-x-4">
-                                <a href="{{ route('dashboard') }}" class="text-sm text-gray-700 hover:text-indigo-600">
+                            <div class="flex items-center space-x-6">
+                                <a href="{{ route('dashboard') }}" class="text-sm text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md transition duration-150 ease-in-out">
                                     Perfil
                                 </a>
                                 
-                                <form method="POST" action="{{ route('logout') }}">
+                                <div class="border-l border-gray-300 h-6"></div>
+                                
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
                                     @csrf
-                                    <button type="submit" class="text-sm text-gray-700 hover:text-indigo-600">
+                                    <button type="submit" class="text-sm text-red-600 hover:text-red-700 px-3 py-2 rounded-md transition duration-150 ease-in-out">
                                         Cerrar Sesión
                                     </button>
                                 </form>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600 mr-4">Iniciar Sesión</a>
-                            
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="text-sm text-gray-700 hover:text-indigo-600">
-                                    Registrarse
+                            <div class="flex items-center space-x-4">
+                                <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md transition duration-150 ease-in-out">
+                                    Iniciar Sesión
                                 </a>
-                            @endif
+                                
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}" class="text-sm bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md transition duration-150 ease-in-out">
+                                        Registrarse
+                                    </a>
+                                @endif
+                            </div>
                         @endauth
                     </div>
                     
