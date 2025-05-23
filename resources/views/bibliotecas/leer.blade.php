@@ -30,7 +30,7 @@
                     <p class="text-gray-600 mb-1 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Autor:</span> {{ $comic->autor->nombre }}</p>
                 @endif
                 
-                <p class="text-gray-600 mb-1 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Género:</span> {{ $comic->genero }}</p>
+                <p class="text-gray-600 mb-1 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Categoría:</span> {{ $comic->categoria }}</p>
                 <p class="text-gray-600 mb-2 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Fecha de publicación:</span> {{ $comic->fecha_publicacion }}</p>
                 
                 <div class="mt-3 sm:mt-4 lg:mt-6">
