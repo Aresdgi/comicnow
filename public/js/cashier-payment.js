@@ -1,4 +1,4 @@
-// Cashier payment handler for Stripe
+// Manejador de pagos de caja para Stripe
 document.addEventListener('DOMContentLoaded', function() {
     const stripe = Stripe(stripeKey);
     const elements = stripe.elements();
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     cardElement.mount('#card-element');
     
-    // Handle form submission
+    // Manejar el envío del formulario
     const form = document.getElementById('payment-form');
     const cardButton = document.getElementById('card-button');
     const cardErrors = document.getElementById('card-errors');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
         
-        // Disable the submit button to prevent multiple clicks
+        // Deshabilitar el botón de envío para prevenir múltiples clics
         cardButton.disabled = true;
         cardButton.classList.add('opacity-75', 'cursor-not-allowed');
         cardButton.textContent = 'Procesando...';
@@ -41,13 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             if (error) {
-                // Display error message
+                // Mostrar mensaje de error
                 cardErrors.textContent = error.message;
                 cardButton.disabled = false;
                 cardButton.classList.remove('opacity-75', 'cursor-not-allowed');
                 cardButton.textContent = `Pagar ${totalAmount} €`;
             } else {
-                // Add payment method ID to form and submit
+                // Agregar ID del método de pago al formulario y enviar
                 const hiddenInput = document.createElement('input');
                 hiddenInput.setAttribute('type', 'hidden');
                 hiddenInput.setAttribute('name', 'payment_method');

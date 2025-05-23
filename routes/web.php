@@ -12,10 +12,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ComicController as AdminComicController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\PedidoController as AdminPedidoController;
-use App\Http\Controllers\Admin\AutorController as AdminAutorController;
-use App\Http\Controllers\Admin\ResenaController as AdminResenaController;
+// use App\Http\Controllers\Admin\PedidoController as AdminPedidoController;
+// use App\Http\Controllers\Admin\AutorController as AdminAutorController;
+// use App\Http\Controllers\Admin\ResenaController as AdminResenaController;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -81,17 +80,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Rutas para gestión de cómics
     Route::resource('comics', AdminComicController::class);
     
-    // Rutas para gestión de usuarios
-    Route::resource('users', AdminUserController::class);
+    // Rutas para gestión de usuarios (solo listado)
+    Route::get('users', [UsuarioController::class, 'index'])->name('users.index');
     
-    // Rutas para gestión de pedidos
-    Route::resource('pedidos', AdminPedidoController::class);
+    // Rutas para gestión de pedidos (temporalmente deshabilitadas - controlador no existe)
+    // Route::resource('pedidos', AdminPedidoController::class);
     
-    // Rutas para gestión de autores
-    Route::resource('autores', AdminAutorController::class);
+    // Rutas para gestión de autores (temporalmente deshabilitadas - controlador no existe)
+    // Route::resource('autores', AdminAutorController::class);
     
-    // Rutas para gestión de reseñas
-    Route::resource('resenas', AdminResenaController::class);
+    // Rutas para gestión de reseñas (temporalmente deshabilitadas - controlador no existe)
+    // Route::resource('resenas', AdminResenaController::class);
     
     // Estadísticas
     Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('estadisticas');
