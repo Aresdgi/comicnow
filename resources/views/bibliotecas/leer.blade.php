@@ -13,17 +13,17 @@
 
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         <!-- Detalles del cómic -->
-        <div class="flex flex-row">
-            <div class="w-1/3 p-2 sm:p-4 lg:p-6">
+        <div class="flex flex-row max-sm:flex-col gap-4">
+            <div class="flex-shrink-0" style="max-width: 250px;">
                 @if($comic->portada_url)
-                    <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="w-full h-auto rounded-lg">
+                    <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="w-full h-auto rounded-lg" style="max-width: 250px;">
                 @else
-                    <div class="w-full h-40 sm:h-60 lg:h-96 bg-gray-200 flex items-center justify-center rounded-lg">
-                        <span class="text-gray-500 text-sm sm:text-lg">Sin imagen disponible</span>
+                    <div class="w-full bg-gray-200 flex items-center justify-center rounded-lg" style="max-width: 250px; height: 300px;">
+                        <span class="text-gray-500 text-sm">Sin imagen disponible</span>
                     </div>
                 @endif
             </div>
-            <div class="w-2/3 p-2 sm:p-4 lg:p-6">
+            <div class="flex-1 p-2 sm:p-4 lg:p-6">
                 <h2 class="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4">{{ $comic->titulo }}</h2>
                 
                 @if($comic->autor)
