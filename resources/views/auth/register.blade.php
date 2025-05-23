@@ -20,6 +20,28 @@
             </div>
 
             <div class="mt-4">
+                <x-label for="direccion" value="{{ __('Dirección') }}" />
+                <x-input id="direccion" class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion')" required autocomplete="address-line1" placeholder="Ingresa tu dirección completa" />
+            </div>
+
+            <div class="mt-4">
+                <x-label for="preferencias" value="{{ __('Preferencias de cómics') }}" />
+                <select id="preferencias" name="preferencias[]" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" multiple>
+                    <option value="accion">Acción</option>
+                    <option value="aventura">Aventura</option>
+                    <option value="comedia">Comedia</option>
+                    <option value="drama">Drama</option>
+                    <option value="fantasia">Fantasía</option>
+                    <option value="ciencia-ficcion">Ciencia Ficción</option>
+                    <option value="romance">Romance</option>
+                    <option value="terror">Terror</option>
+                    <option value="superheros">Superhéroes</option>
+                    <option value="manga">Manga</option>
+                </select>
+                <p class="mt-1 text-sm text-gray-600">Mantén presionado Ctrl (Cmd en Mac) para seleccionar múltiples opciones</p>
+            </div>
+
+            <div class="mt-4">
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>

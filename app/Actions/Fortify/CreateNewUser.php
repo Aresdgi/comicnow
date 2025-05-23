@@ -22,6 +22,9 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:usuarios'],
+            'direccion' => ['required', 'string', 'max:500'],
+            'preferencias' => ['array'],
+            'preferencias.*' => ['string', 'in:accion,aventura,comedia,drama,fantasia,ciencia-ficcion,romance,terror,superheros,manga'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
@@ -30,9 +33,9 @@ class CreateNewUser implements CreatesNewUsers
             'nombre' => $input['name'],
             'email' => $input['email'],
             'contraseña' => Hash::make($input['password']),
+            'direccion' => $input['direccion'],
+            'preferencias' => json_encode($input['preferencias'] ?? []),
             'rol' => 'cliente', // Por defecto, los nuevos usuarios son clientes
-            'direccion' => '',
-            'preferencias' => '{}',
         ]);
     }
 }
