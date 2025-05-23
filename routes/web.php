@@ -80,20 +80,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Rutas para gestión de cómics
     Route::resource('comics', AdminComicController::class);
     
+    // Rutas para gestión de autores
+    Route::resource('autores', AutorController::class);
+    
     // Rutas para gestión de usuarios (solo listado)
     Route::get('users', [UsuarioController::class, 'index'])->name('users.index');
     
-    // Rutas para gestión de pedidos (temporalmente deshabilitadas - controlador no existe)
-    // Route::resource('pedidos', AdminPedidoController::class);
     
-    // Rutas para gestión de autores (temporalmente deshabilitadas - controlador no existe)
-    // Route::resource('autores', AdminAutorController::class);
-    
-    // Rutas para gestión de reseñas (temporalmente deshabilitadas - controlador no existe)
-    // Route::resource('resenas', AdminResenaController::class);
-    
-    // Estadísticas (temporalmente deshabilitada - método no existe)
-    // Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('estadisticas');
 });
 
 // Rutas para usuarios normales

@@ -20,6 +20,16 @@
                                     </a>
                                 </li>
                                 <li class="mb-2">
+                                    <a href="{{ route('admin.autores.create') }}" class="block p-2 rounded hover:bg-gray-200 transition">
+                                        Añadir Autor
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{{ route('admin.autores.index') }}" class="block p-2 rounded hover:bg-gray-200 transition">
+                                        Editar/eliminar Autor
+                                    </a>
+                                </li>
+                                <li class="mb-2">
                                     <a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-gray-200 transition">
                                         Usuarios
                                     </a>

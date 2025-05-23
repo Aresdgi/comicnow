@@ -14,8 +14,8 @@ class AutorController extends Controller
      */
     public function index()
     {
-        $autores = Autor::withCount('comics')->get();
-        return view('autores.index', compact('autores'));
+        $autores = Autor::withCount('comics')->orderBy('nombre')->paginate(10);
+        return view('admin.autores.index', compact('autores'));
     }
 
     /**
@@ -23,7 +23,7 @@ class AutorController extends Controller
      */
     public function create()
     {
-        return view('autores.create');
+        return view('admin.autores.create');
     }
 
     /**
@@ -33,22 +33,16 @@ class AutorController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'biografia' => 'required|string',
-            'foto_url' => 'nullable|image|max:2048',
-            'nacionalidad' => 'nullable|string|max:100',
+            'biografia' => 'nullable|string',
+            'editorial' => 'required|string|max:255',
+            'comision' => 'required|numeric|min:0|max:100',
         ]);
 
         $data = $request->all();
 
-        // Manejo de la imagen del autor
-        if ($request->hasFile('foto_url')) {
-            $fotoPath = $request->file('foto_url')->store('autores', 'public');
-            $data['foto_url'] = $fotoPath;
-        }
-
         Autor::create($data);
 
-        return redirect()->route('autores.index')
+        return redirect()->route('admin.autores.index')
             ->with('success', 'Autor creado exitosamente');
     }
 
@@ -57,8 +51,8 @@ class AutorController extends Controller
      */
     public function show(Autor $autor)
     {
-        $comics = Comic::where('id_autor', $autor->id_autor)->get();
-        return view('autores.show', compact('autor', 'comics'));
+        $comics = Comic::where('id_autor', $autor->id_autor)->paginate(6);
+        return view('admin.autores.show', compact('autor', 'comics'));
     }
 
     /**
@@ -66,7 +60,7 @@ class AutorController extends Controller
      */
     public function edit(Autor $autor)
     {
-        return view('autores.edit', compact('autor'));
+        return view('admin.autores.edit', compact('autor'));
     }
 
     /**
@@ -76,26 +70,16 @@ class AutorController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'biografia' => 'required|string',
-            'foto_url' => 'nullable|image|max:2048',
-            'nacionalidad' => 'nullable|string|max:100',
+            'biografia' => 'nullable|string',
+            'editorial' => 'required|string|max:255',
+            'comision' => 'required|numeric|min:0|max:100',
         ]);
 
         $data = $request->all();
 
-        // Manejo de la imagen del autor
-        if ($request->hasFile('foto_url')) {
-            // Eliminar imagen anterior si existe
-            if ($autor->foto_url && Storage::disk('public')->exists($autor->foto_url)) {
-                Storage::disk('public')->delete($autor->foto_url);
-            }
-            $fotoPath = $request->file('foto_url')->store('autores', 'public');
-            $data['foto_url'] = $fotoPath;
-        }
-
         $autor->update($data);
 
-        return redirect()->route('autores.index')
+        return redirect()->route('admin.autores.index')
             ->with('success', 'Autor actualizado exitosamente');
     }
 
@@ -111,14 +95,9 @@ class AutorController extends Controller
             return back()->with('error', 'No se puede eliminar el autor porque tiene comics asociados');
         }
         
-        // Eliminar la imagen si existe
-        if ($autor->foto_url && Storage::disk('public')->exists($autor->foto_url)) {
-            Storage::disk('public')->delete($autor->foto_url);
-        }
-        
         $autor->delete();
 
-        return redirect()->route('autores.index')
+        return redirect()->route('admin.autores.index')
             ->with('success', 'Autor eliminado exitosamente');
     }
 }
