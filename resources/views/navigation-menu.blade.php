@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 shadow-sm">
+<nav x-data="{ open: false }" class="bg-gradient-to-b from-[#4a5c6a] to-[#111827] border-b border-gray-700 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
         <div class="flex justify-between h-16 overflow-visible">
@@ -51,22 +51,22 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
                     <div class="flex items-center space-x-6">
-                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-gray-700 hover:text-gray-900">
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-gray-300 hover:text-white">
                             {{ __('Perfil') }}
                         </x-nav-link>
                         
-                        <div class="border-l border-gray-300 h-6"></div>
+                        <div class="border-l border-gray-500 h-6"></div>
                         
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="text-red-600 hover:text-red-700 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out">
+                            <button type="submit" class="text-red-400 hover:text-red-300 px-3 py-2 text-sm font-medium transition duration-150 ease-in-out">
                                 {{ __('Cerrar Sesión') }}
                             </button>
                         </form>
                     </div>
                 @else
                     <div class="flex items-center space-x-4">
-                        <x-nav-link href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">
+                        <x-nav-link href="{{ route('login') }}" class="text-gray-300 hover:text-white">
                             {{ __('Iniciar sesión') }}
                         </x-nav-link>
                         <x-nav-link href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 ease-in-out">
@@ -78,7 +78,7 @@
 
             <!-- Hamburger para móviles -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -89,7 +89,7 @@
     </div>
 
     <!-- Menú móvil -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-gray-100">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-gray-900 border-t border-gray-700">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                 {{ __('Inicio') }}
