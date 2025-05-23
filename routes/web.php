@@ -8,9 +8,7 @@ use App\Http\Controllers\BibliotecaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\CarritoController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ComicController as AdminComicController;
 // use App\Http\Controllers\Admin\PedidoController as AdminPedidoController;
 // use App\Http\Controllers\Admin\AutorController as AdminAutorController;
@@ -75,7 +73,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 // Rutas de administración unificadas
 Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
     
     // Rutas para gestión de cómics
     Route::resource('comics', AdminComicController::class);
@@ -92,8 +92,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Rutas para gestión de reseñas (temporalmente deshabilitadas - controlador no existe)
     // Route::resource('resenas', AdminResenaController::class);
     
-    // Estadísticas
-    Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('estadisticas');
+    // Estadísticas (temporalmente deshabilitada - método no existe)
+    // Route::get('/estadisticas', [AdminController::class, 'estadisticas'])->name('estadisticas');
 });
 
 // Rutas para usuarios normales
