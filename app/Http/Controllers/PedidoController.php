@@ -23,11 +23,14 @@ class PedidoController extends Controller
     }
 
     /**
-     * Muestra una lista de todos los pedidos.
+     * Muestra una lista de los pedidos del usuario autenticado.
      */
     public function index()
     {
-        $pedidos = Pedido::with('usuario')->get();
+        $pedidos = Pedido::with(['detalles.comic', 'usuario'])
+                         ->where('id_usuario', Auth::id())
+                         ->orderByDesc('fecha')
+                         ->get();
         return view('pedidos.index', compact('pedidos'));
     }
 
@@ -106,7 +109,7 @@ class PedidoController extends Controller
             // Crear el pedido
             $pedido = new Pedido();
             $pedido->id_usuario = Auth::id();
-            $pedido->fecha_pedido = Carbon::now();
+            $pedido->fecha = Carbon::now();
             $pedido->estado = 'pendiente';
             $pedido->total = $total;
             $pedido->direccion_envio = $request->direccion_envio;
@@ -122,7 +125,7 @@ class PedidoController extends Controller
                     $detalle->id_pedido = $pedido->id_pedido;
                     $detalle->id_comic = $id_comic;
                     $detalle->cantidad = $cantidad;
-                    $detalle->precio_unitario = $comic->precio;
+                    $detalle->precio = $comic->precio;
                     $detalle->save();
                 }
             }
@@ -147,7 +150,7 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
-        $pedido = Pedido::with(['detallesPedido.comic', 'usuario'])
+        $pedido = Pedido::with(['detalles.comic', 'usuario'])
                 ->where('id_usuario', Auth::id())
                 ->findOrFail($id);
                 
@@ -203,7 +206,7 @@ class PedidoController extends Controller
      */
     public function confirmacion($id)
     {
-        $pedido = Pedido::with(['detallesPedido.comic', 'usuario'])
+        $pedido = Pedido::with(['detalles.comic', 'usuario'])
                 ->where('id_usuario', Auth::id())
                 ->findOrFail($id);
                 
@@ -216,37 +219,9 @@ class PedidoController extends Controller
     public function misPedidos()
     {
         $pedidos = Pedido::where('id_usuario', Auth::id())
-                 ->orderByDesc('fecha_pedido')
+                 ->orderByDesc('fecha')
                  ->paginate(10);
                  
         return view('pedidos.mis-pedidos', compact('pedidos'));
-    }
-    
-    /**
-     * Permite al usuario cancelar un pedido (solo si está en estado pendiente)
-     */
-    public function cancelar($id)
-    {
-        $pedido = Pedido::where('id_usuario', Auth::id())
-                ->where('estado', 'pendiente')
-                ->findOrFail($id);
-        
-        DB::beginTransaction();
-        
-        try {
-            // Actualizar el estado del pedido
-            $pedido->estado = 'cancelado';
-            $pedido->save();
-            
-            DB::commit();
-            
-            return redirect()->route('pedidos.mis-pedidos')
-                ->with('success', 'Su pedido ha sido cancelado exitosamente.');
-                
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('pedidos.mis-pedidos')
-                ->with('error', 'Ha ocurrido un error al cancelar su pedido. Por favor, inténtelo nuevamente.');
-        }
     }
 }
