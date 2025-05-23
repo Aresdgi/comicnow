@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-gradient-to-b from-[#4a5c6a] to-[#111827] border-b border-gray-700 shadow-sm">
+<nav x-data="{ open: false }" class="bg-gradient-to-b from-[#4a5c6a] to-[#111827] shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
         <div class="flex justify-between h-16 overflow-visible">

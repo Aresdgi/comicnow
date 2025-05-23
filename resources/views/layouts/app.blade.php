@@ -20,7 +20,7 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 flex flex-col">
             @livewire('navigation-menu')
 
             <!-- Page Heading -->
@@ -33,10 +33,13 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-grow">
                 @yield('content')
                 {{ $slot ?? '' }}
             </main>
+            
+            <!-- Footer -->
+            <x-footer />
         </div>
 
         @stack('modals')

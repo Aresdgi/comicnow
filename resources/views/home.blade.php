@@ -31,7 +31,7 @@
         </section>
 
         <!-- Features Section -->
-        <section class="py-16 border-t border-gray-800">
+        <section class="py-16">
             <div class="container mx-auto px-4 text-center space-y-6">
                 <h2 class="text-3xl font-bold text-white">Todos los mejores comics estarán aquí</h2>
                 <p class="text-gray-400">Sumérgete en las mejores historias</p>
