@@ -49,10 +49,18 @@ document.addEventListener('DOMContentLoaded', function() {
                       // Actualizar los contadores del carrito en la barra de navegación si existen
                     const cartBadge = document.getElementById('cart-badge');
                     const cartBadgeMobile = document.getElementById('cart-badge-mobile');
+                    const cartLink = document.querySelector('a[href*="carrito"]');
                     
                     if (cartBadge) {
                         cartBadge.textContent = data.total_items;
                         cartBadge.classList.remove('hidden');
+                    } else if (cartLink && data.total_items > 0) {
+                        // Crear el badge si no existe
+                        const newBadge = document.createElement('span');
+                        newBadge.id = 'cart-badge';
+                        newBadge.className = 'bg-red-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full';
+                        newBadge.textContent = data.total_items;
+                        cartLink.appendChild(newBadge);
                     }
                     
                     if (cartBadgeMobile) {
@@ -61,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     // Añadir una animación al carrito
-                    const cartLink = document.querySelector('a[href*="carrito"]');
                     if (cartLink) {
                         cartLink.classList.add('animate-pulse');
                         setTimeout(() => {

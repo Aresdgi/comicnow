@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 shadow-sm">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+        <div class="flex justify-between h-16 overflow-visible">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex overflow-visible">
                     <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Inicio') }}
                     </x-nav-link>
@@ -22,14 +22,23 @@
                         <x-nav-link href="{{ route('biblioteca.index') }}" :active="request()->routeIs('biblioteca.index')">
                             {{ __('Tu Biblioteca') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('carrito.index') }}" :active="request()->routeIs('carrito.index')" class="relative">
+                        <x-nav-link
+                            href="{{ route('carrito.index') }}"
+                            :active="request()->routeIs('carrito.index')"
+                            class="inline-flex items-center gap-1"
+                        >
                             {{ __('Carrito') }}
                             @php
                                 $carrito = session('carrito', []);
                                 $cantidad = count($carrito);
                             @endphp
                             @if($cantidad > 0)
-                                <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                                <span
+                                    id="cart-badge"
+                                    class="bg-red-600 text-white text-xs font-bold
+                                           w-5 h-5 flex items-center justify-center
+                                           rounded-full"
+                                >
                                     {{ $cantidad }}
                                 </span>
                             @endif

@@ -92,12 +92,12 @@
                         <form action="{{ route('carrito.vaciar') }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" style="background-color: #ef4444 !important; color: white !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
                                 Vaciar carrito
                             </button>
                         </form>
 
-                        <a href="{{ route('checkout') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('checkout') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" style="background-color: #3b82f6 !important; color: white !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
                             Proceder al pago
                         </a>
                     </div>
