@@ -42,26 +42,15 @@ class CarritoController extends Controller
         $id = $request->id_comic;
         $cantidad = $request->cantidad;
         
-        // Verificar stock disponible
+        // Obtener el cómic
         $comic = Comic::findOrFail($id);
-        
-        if ($comic->stock < $cantidad) {
-            return back()->with('error', 'Lo sentimos, no hay suficiente stock disponible. Stock actual: ' . $comic->stock);
-        }
         
         // Obtener el carrito actual
         $carrito = session()->get('carrito', []);
         
         // Agregar el producto o actualizar la cantidad
         if (isset($carrito[$id])) {
-            $nuevaCantidad = $carrito[$id]['cantidad'] + $cantidad;
-            
-            // Verificar que la nueva cantidad no exceda el stock
-            if ($nuevaCantidad > $comic->stock) {
-                return back()->with('error', 'La cantidad solicitada excede el stock disponible. Stock actual: ' . $comic->stock);
-            }
-            
-            $carrito[$id]['cantidad'] = $nuevaCantidad;
+            $carrito[$id]['cantidad'] = $carrito[$id]['cantidad'] + $cantidad;
         } else {
             $carrito[$id] = [
                 'titulo' => $comic->titulo,
@@ -88,12 +77,8 @@ class CarritoController extends Controller
         
         $cantidad = $request->cantidad;
         
-        // Verificar stock disponible
+        // Verificar que el cómic existe
         $comic = Comic::findOrFail($id_comic);
-        
-        if ($comic->stock < $cantidad) {
-            return back()->with('error', 'Lo sentimos, no hay suficiente stock disponible. Stock actual: ' . $comic->stock);
-        }
         
         // Obtener el carrito actual
         $carrito = session()->get('carrito', []);
@@ -150,12 +135,12 @@ class CarritoController extends Controller
         $id = $request->id_comic;
         $cantidad = $request->cantidad;
 
-        // Verificar que hay suficiente stock
+        // Verificar que el cómic existe
         $comic = Comic::find($id);
-        if (!$comic || $comic->stock < $cantidad) {
+        if (!$comic) {
             return response()->json([
                 'success' => false,
-                'message' => 'No hay suficiente stock disponible.'
+                'message' => 'El cómic no existe.'
             ]);
         }
 
@@ -164,17 +149,7 @@ class CarritoController extends Controller
 
         // Agregar o actualizar la cantidad en el carrito
         if (isset($carrito[$id])) {
-            $nuevaCantidad = $carrito[$id]['cantidad'] + $cantidad;
-            
-            // Verificar que la nueva cantidad no exceda el stock
-            if ($nuevaCantidad > $comic->stock) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'La cantidad total excedería el stock disponible.'
-                ]);
-            }
-            
-            $carrito[$id]['cantidad'] = $nuevaCantidad;
+            $carrito[$id]['cantidad'] = $carrito[$id]['cantidad'] + $cantidad;
         } else {
             $carrito[$id] = [
                 'titulo' => $comic->titulo,

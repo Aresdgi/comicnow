@@ -68,8 +68,8 @@
                         </div>
                         
                         <div class="mb-4">
-                            <p class="text-sm text-gray-600 font-medium">Stock</p>
-                            <p class="text-gray-800">{{ $comic->stock }} unidades</p>
+                            <p class="text-sm text-gray-600 font-medium">Categoría</p>
+                            <p class="text-gray-800">{{ $comic->categoria }}</p>
                         </div>
                         
                         <div class="mb-4">

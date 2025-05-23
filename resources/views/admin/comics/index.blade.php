@@ -31,7 +31,7 @@
                     <th class="py-3 px-4 text-left">Título</th>
                     <th class="py-3 px-4 text-left">Autor</th>
                     <th class="py-3 px-4 text-left">Precio</th>
-                    <th class="py-3 px-4 text-left">Stock</th>
+                    <th class="py-3 px-4 text-left">Categoría</th>
                     <th class="py-3 px-4 text-left">Acciones</th>
                 </tr>
             </thead>
@@ -49,7 +49,7 @@
                     <td class="py-3 px-4">{{ $comic->titulo }}</td>
                     <td class="py-3 px-4">{{ $comic->autor->nombre ?? 'Sin autor' }}</td>
                     <td class="py-3 px-4">€{{ $comic->precio }}</td>
-                    <td class="py-3 px-4">{{ $comic->stock }}</td>
+                    <td class="py-3 px-4">{{ $comic->categoria }}</td>
                     <td class="py-3 px-4">
                         <div class="flex space-x-2">
                             <a href="{{ route('admin.comics.show', $comic->id_comic) }}" class="text-blue-600 hover:text-blue-900">Ver</a>

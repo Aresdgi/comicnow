@@ -58,12 +58,12 @@
                     @enderror
                 </div>
                 
-                <!-- Stock -->
+                <!-- Categoría -->
                 <div>
-                    <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                    <input type="number" name="stock" id="stock" min="0" value="{{ old('stock', $comic->stock) }}" required
+                    <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                    <input type="text" name="categoria" id="categoria" value="{{ old('categoria', $comic->categoria ?? '') }}" required
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                    @error('stock')
+                    @error('categoria')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

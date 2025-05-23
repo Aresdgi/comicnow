@@ -110,10 +110,6 @@ class CashierService
                         'comic_id' => $id
                     ]);
                 }
-                
-                // Actualizar stock del cómic
-                $comic->stock -= $item['cantidad'];
-                $comic->save();
             }
         }
         
@@ -180,10 +176,6 @@ class CashierService
                         'comic_id' => $id
                     ]);
                 }
-                
-                // Actualizar stock del cómic
-                $comic->stock -= $item['cantidad'];
-                $comic->save();
             }
         }
         

@@ -51,8 +51,8 @@
                 </div>
                 
                 <div class="mb-4">
-                    <p class="text-sm text-gray-600 font-medium">Stock</p>
-                    <p class="text-gray-800">{{ $comic->stock }} unidades</p>
+                    <p class="text-sm text-gray-600 font-medium">Categoría</p>
+                    <p class="text-gray-800">{{ $comic->categoria }}</p>
                 </div>
                 
                 <div class="mb-6">
@@ -65,23 +65,19 @@
                 
                 <!-- Formulario para añadir al carrito -->
                 <div class="mt-4">
-                    @if($comic->stock > 0)
-                        <form id="add-to-cart-form" action="{{ route('carrito.agregar') }}" method="POST" class="flex items-end space-x-2">
-                            @csrf
-                            <input type="hidden" name="id_comic" value="{{ $comic->id_comic }}">
-                            
-                            <div class="flex flex-col">
-                                <label for="cantidad" class="text-sm text-gray-600 mb-1">Cantidad:</label>
-                                <input type="number" name="cantidad" id="cantidad" value="1" min="1" max="{{ $comic->stock }}" class="border rounded p-2 w-20">
-                            </div>
-                            
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded text-center" style="background-color: #0052CC;">
-                                Añadir al carrito
-                            </button>
-                        </form>
-                    @else
-                        <p class="text-red-600 font-medium">Agotado</p>
-                    @endif
+                    <form id="add-to-cart-form" action="{{ route('carrito.agregar') }}" method="POST" class="flex items-end space-x-2">
+                        @csrf
+                        <input type="hidden" name="id_comic" value="{{ $comic->id_comic }}">
+                        
+                        <div class="flex flex-col">
+                            <label for="cantidad" class="text-sm text-gray-600 mb-1">Cantidad:</label>
+                            <input type="number" name="cantidad" id="cantidad" value="1" min="1" class="border rounded p-2 w-20">
+                        </div>
+                        
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded text-center" style="background-color: #0052CC;">
+                            Añadir al carrito
+                        </button>
+                    </form>
                 </div>
                 
                 @if($comic->resenas && $comic->resenas->count() > 0)

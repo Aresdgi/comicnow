@@ -13,41 +13,29 @@
 
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         <!-- Detalles del cómic -->
-        <div class="flex flex-col md:flex-row">
-            <div class="w-full md:w-1/3 p-4 sm:p-6">
+        <div class="flex flex-row">
+            <div class="w-1/3 p-2 sm:p-4 lg:p-6">
                 @if($comic->portada_url)
                     <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="w-full h-auto rounded-lg">
                 @else
-                    <div class="w-full h-60 sm:h-96 bg-gray-200 flex items-center justify-center rounded-lg">
-                        <span class="text-gray-500 text-lg">Sin imagen disponible</span>
+                    <div class="w-full h-40 sm:h-60 lg:h-96 bg-gray-200 flex items-center justify-center rounded-lg">
+                        <span class="text-gray-500 text-sm sm:text-lg">Sin imagen disponible</span>
                     </div>
                 @endif
             </div>
-            <div class="w-full md:w-2/3 p-4 sm:p-6">
-                <h2 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">{{ $comic->titulo }}</h2>
+            <div class="w-2/3 p-2 sm:p-4 lg:p-6">
+                <h2 class="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4">{{ $comic->titulo }}</h2>
                 
                 @if($comic->autor)
-                    <p class="text-gray-600 mb-2"><span class="font-semibold">Autor:</span> {{ $comic->autor->nombre }}</p>
+                    <p class="text-gray-600 mb-1 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Autor:</span> {{ $comic->autor->nombre }}</p>
                 @endif
                 
-                <p class="text-gray-600 mb-2"><span class="font-semibold">Género:</span> {{ $comic->genero }}</p>
-                <p class="text-gray-600 mb-2"><span class="font-semibold">Fecha de publicación:</span> {{ $comic->fecha_publicacion }}</p>
+                <p class="text-gray-600 mb-1 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Género:</span> {{ $comic->genero }}</p>
+                <p class="text-gray-600 mb-2 sm:mb-2 text-sm sm:text-base"><span class="font-semibold">Fecha de publicación:</span> {{ $comic->fecha_publicacion }}</p>
                 
-                <div class="mt-4 sm:mt-6">
-                    <h3 class="text-base sm:text-lg font-semibold mb-2">Sinopsis</h3>
-                    <p class="text-gray-700 text-sm sm:text-base">{{ $comic->descripcion }}</p>
-                </div>
-                
-                <!-- Progreso de lectura -->
-                <div class="mt-4 sm:mt-6">
-                    <h3 class="text-base sm:text-lg font-semibold mb-2">Tu progreso</h3>
-                    <div class="w-full bg-gray-200 rounded-full h-3 sm:h-4 mb-2">
-                        @php
-                            $progreso = $entrada->progreso_lectura ?? 0;
-                        @endphp
-                        <div class="bg-blue-600 h-3 sm:h-4 rounded-full" style="width: {{ $progreso }}%"></div>
-                    </div>
-                    <p class="text-xs sm:text-sm text-gray-600">{{ $progreso }}% completado</p>
+                <div class="mt-3 sm:mt-4 lg:mt-6">
+                    <h3 class="text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2">Sinopsis</h3>
+                    <p class="text-gray-700 text-xs sm:text-sm lg:text-base">{{ $comic->descripcion }}</p>
                 </div>
             </div>
         </div>
@@ -65,19 +53,13 @@
             </div>
             
             <!-- Usando iframe para mostrar el PDF con el visor nativo del navegador -->
-            <div class="bg-gray-100 p-2 sm:p-4 rounded-lg mb-4">
+            <div class="bg-gray-100 p-2 sm:p-4 rounded-lg">
                 <div id="pdf-container" style="position: relative; padding-bottom: 140%; height: 0; overflow: hidden;">
                     <iframe id="pdf-iframe" src="{{ asset('storage/' . $comic->archivo_comic) }}" 
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
                             frameborder="0" 
                             allowfullscreen></iframe>
                 </div>
-            </div>
-            
-            <div class="text-center">
-                <button id="actualizar-progreso" class="bg-indigo-600 text-white w-full sm:w-auto px-4 sm:px-6 py-2 rounded hover:bg-indigo-700 text-sm sm:text-base">
-                    Guardar progreso de lectura
-                </button>
             </div>
         </div>
     </div>
@@ -127,39 +109,6 @@
         fullscreenBtn.addEventListener('click', function() {
             // Abrir el PDF en una nueva ventana a pantalla completa
             window.open("{{ asset('storage/' . $comic->archivo_comic) }}", "_blank", "fullscreen=yes,toolbar=yes");
-        });
-
-        // Botón para actualizar progreso
-        const btnActualizar = document.getElementById('actualizar-progreso');
-        
-        btnActualizar.addEventListener('click', function() {
-            // Esto es una simulación - en un caso real podríamos intentar 
-            // obtener la página actual del PDF usando mensajes entre frames 
-            // pero depende del navegador y de las políticas de seguridad
-            const progresoEstimado = 50; // Estimamos 50% de progreso
-            
-            // Guardar progreso
-            fetch('{{ route("biblioteca.actualizar", $comic->id_comic) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    progreso_lectura: progresoEstimado,
-                    ultimo_marcador: 1 // Página estimada
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('¡Progreso actualizado!');
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error al actualizar el progreso:', error);
-            });
         });
     });
 </script>

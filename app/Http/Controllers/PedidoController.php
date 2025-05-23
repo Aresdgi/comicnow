@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pedido;
 use App\Models\DetallePedido;
 use App\Models\Comic;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class PedidoController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // La autenticación se implementará en las rutas
     }
 
     /**
@@ -36,7 +37,7 @@ class PedidoController extends Controller
     public function create()
     {
         $usuarios = Usuario::all();
-        $comics = Comic::where('stock', '>', 0)->get();
+        $comics = Comic::all();
         return view('pedidos.create', compact('usuarios', 'comics'));
     }
 
@@ -58,11 +59,6 @@ class PedidoController extends Controller
         foreach ($carrito as $id_comic => $cantidad) {
             $comic = Comic::find($id_comic);
             if ($comic) {
-                // Verificar stock
-                if ($comic->stock < $cantidad) {
-                    return redirect()->route('carrito.index')->with('error', 'Lo sentimos, no hay suficiente stock de "' . $comic->titulo . '". Stock disponible: ' . $comic->stock);
-                }
-                
                 $subtotal = $comic->precio * $cantidad;
                 $total += $subtotal;
                 $items[] = [
@@ -98,28 +94,13 @@ class PedidoController extends Controller
         
         try {
             $total = 0;
-            $itemsDisponibles = true;
-            $itemsInvalidos = [];
             
-            // Verificar disponibilidad de todos los productos
+            // Calcular el total del pedido
             foreach ($carrito as $id_comic => $cantidad) {
                 $comic = Comic::find($id_comic);
-                if (!$comic || $comic->stock < $cantidad) {
-                    $itemsDisponibles = false;
-                    if ($comic) {
-                        $itemsInvalidos[] = 'No hay suficiente stock de "' . $comic->titulo . '". Stock disponible: ' . $comic->stock;
-                    } else {
-                        $itemsInvalidos[] = 'El cómic solicitado ya no está disponible.';
-                    }
-                } else {
+                if ($comic) {
                     $total += $comic->precio * $cantidad;
                 }
-            }
-            
-            // Si hay productos no disponibles, abortar
-            if (!$itemsDisponibles) {
-                DB::rollBack();
-                return redirect()->route('carrito.index')->with('error', implode('<br>', $itemsInvalidos));
             }
             
             // Crear el pedido
@@ -132,21 +113,18 @@ class PedidoController extends Controller
             $pedido->metodo_pago = $request->metodo_pago;
             $pedido->save();
             
-            // Crear los detalles del pedido y actualizar stock
+            // Crear los detalles del pedido
             foreach ($carrito as $id_comic => $cantidad) {
                 $comic = Comic::find($id_comic);
-                
-                // Crear detalle
-                $detalle = new DetallePedido();
-                $detalle->id_pedido = $pedido->id_pedido;
-                $detalle->id_comic = $id_comic;
-                $detalle->cantidad = $cantidad;
-                $detalle->precio_unitario = $comic->precio;
-                $detalle->save();
-                
-                // Actualizar stock
-                $comic->stock -= $cantidad;
-                $comic->save();
+                if ($comic) {
+                    // Crear detalle
+                    $detalle = new DetallePedido();
+                    $detalle->id_pedido = $pedido->id_pedido;
+                    $detalle->id_comic = $id_comic;
+                    $detalle->cantidad = $cantidad;
+                    $detalle->precio_unitario = $comic->precio;
+                    $detalle->save();
+                }
             }
             
             // Vaciar el carrito
@@ -160,7 +138,7 @@ class PedidoController extends Controller
         } catch (\Exception $e) {
             // Revertir en caso de error
             DB::rollBack();
-            return redirect()->route('carrito.index')->with('error', 'Ha ocurrido un error al procesar su pedido. Por favor, inténtelo nuevamente.');
+            return redirect()->route('carrito.index')->with('error', 'Ocurrió un error al procesar tu pago: ' . $e->getMessage());
         }
     }
 
@@ -210,15 +188,6 @@ class PedidoController extends Controller
      */
     public function destroy(Pedido $pedido)
     {
-        // Primero devolvemos el stock
-        foreach ($pedido->detalles as $detalle) {
-            $comic = Comic::find($detalle->id_comic);
-            if ($comic) {
-                $comic->stock += $detalle->cantidad;
-                $comic->save();
-            }
-        }
-
         // Eliminar detalles (se podría hacer con un cascade en la migración también)
         DetallePedido::where('id_pedido', $pedido->id_pedido)->delete();
         
@@ -268,15 +237,6 @@ class PedidoController extends Controller
             // Actualizar el estado del pedido
             $pedido->estado = 'cancelado';
             $pedido->save();
-            
-            // Devolver stock
-            foreach ($pedido->detallesPedido as $detalle) {
-                $comic = Comic::find($detalle->id_comic);
-                if ($comic) {
-                    $comic->stock += $detalle->cantidad;
-                    $comic->save();
-                }
-            }
             
             DB::commit();
             

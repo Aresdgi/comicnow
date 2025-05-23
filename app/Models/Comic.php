@@ -18,7 +18,7 @@ class Comic extends Model
         'portada_url',
         'archivo_comic',
         'precio',
-        'stock',
+        'categoria',
         'id_autor'
     ];
 
