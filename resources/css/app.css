@@ -14,3 +14,12 @@
     display: block;
     margin: 0 auto;
 }
+
+/* Estilos específicos para el home */
+.home-dark-bg {
+    background-color: #111827 !important;
+}
+
+.home-dark-bg .min-h-screen.bg-gray-100 {
+    background-color: #111827 !important;
+}
