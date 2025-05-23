@@ -118,14 +118,7 @@ class AdminController extends Controller
         $pedido->estado = $request->estado;
         $pedido->save();
         
-        // Si el pedido es cancelado, devolvemos el stock
-        if ($request->estado === 'cancelado' && $pedido->isDirty('estado')) {
-            foreach ($pedido->detalles as $detalle) {
-                $comic = $detalle->comic;
-                $comic->stock += $detalle->cantidad;
-                $comic->save();
-            }
-        }
+        // Ya no es necesario devolver stock, pues no existe el campo
         
         return redirect()->back()->with('success', 'Estado del pedido actualizado correctamente.');
     }
@@ -224,7 +217,7 @@ class AdminController extends Controller
             'id_autor' => 'required|exists:autores,id_autor',
             'descripcion' => 'required|string',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'categoria' => 'required|string|max:100',
             'portada_url' => 'nullable|image|max:2048',
             'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
@@ -236,7 +229,7 @@ class AdminController extends Controller
         $comic->id_autor = $request->id_autor;
         $comic->descripcion = $request->descripcion;
         $comic->precio = $request->precio;
-        $comic->stock = $request->stock;
+        $comic->categoria = $request->categoria;
 
         // Manejar la portada si se sube una nueva
         if ($request->hasFile('portada_url')) {

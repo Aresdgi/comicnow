@@ -70,6 +70,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     
     // Reseñas
     Route::post('/resenas/crear/{comic_id}', [ResenaController::class, 'store'])->name('resenas.store');
+    Route::post('/resenas/lector/{comic_id}', [ResenaController::class, 'storeFromReader'])->name('resenas.store.reader');
     Route::delete('/resenas/{id}', [ResenaController::class, 'destroy'])->name('resenas.destroy');
 });
 
@@ -102,9 +103,9 @@ Route::prefix('user')->name('user.')->middleware(['auth'])->group(function () {
     
     // Rutas para reseñas
     Route::get('/resenas', [App\Http\Controllers\User\ResenaController::class, 'index'])->name('resenas');
-    Route::get('/resenas/{id}/edit', [App\Http\Controllers\User\ResenaController::class, 'edit'])->name('resenas.edit');
-    Route::put('/resenas/{id}', [App\Http\Controllers\User\ResenaController::class, 'update'])->name('resenas.update');
-    Route::delete('/resenas/{id}', [App\Http\Controllers\User\ResenaController::class, 'destroy'])->name('resenas.destroy');
+    Route::get('/resenas/{id_resena}/edit', [App\Http\Controllers\User\ResenaController::class, 'edit'])->name('resenas.edit');
+    Route::put('/resenas/{id_resena}', [App\Http\Controllers\User\ResenaController::class, 'update'])->name('resenas.update');
+    Route::delete('/resenas/{id_resena}', [App\Http\Controllers\User\ResenaController::class, 'destroy'])->name('resenas.destroy');
 });
 
 // API para interacciones AJAX

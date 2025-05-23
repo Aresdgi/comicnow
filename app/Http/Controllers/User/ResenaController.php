@@ -15,8 +15,8 @@ class ResenaController extends Controller
     public function index()
     {
         // Obtener todas las reseñas del usuario actual
-        $resenas = Resena::where('id_usuario', Auth::id())
-            ->with('comic')
+        $resenas = Resena::where('id_usuario', Auth::user()->id_usuario)
+            ->with(['comic.autor'])
             ->orderBy('created_at', 'desc')
             ->get();
             
@@ -26,10 +26,10 @@ class ResenaController extends Controller
     /**
      * Editar una reseña
      */
-    public function edit($id)
+    public function edit($id_resena)
     {
-        $resena = Resena::where('id_usuario', Auth::id())
-            ->where('id', $id)
+        $resena = Resena::where('id_usuario', Auth::user()->id_usuario)
+            ->where('id_resena', $id_resena)
             ->firstOrFail();
             
         return view('user.resenas-edit', compact('resena'));
@@ -38,15 +38,15 @@ class ResenaController extends Controller
     /**
      * Actualizar una reseña
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_resena)
     {
-        $resena = Resena::where('id_usuario', Auth::id())
-            ->where('id', $id)
+        $resena = Resena::where('id_usuario', Auth::user()->id_usuario)
+            ->where('id_resena', $id_resena)
             ->firstOrFail();
             
         $resena->update([
             'comentario' => $request->comentario,
-            'puntuacion' => $request->puntuacion,
+            'valoracion' => $request->valoracion,
         ]);
         
         return redirect()->route('user.resenas')->with('success', 'Reseña actualizada correctamente');
@@ -55,10 +55,10 @@ class ResenaController extends Controller
     /**
      * Eliminar una reseña
      */
-    public function destroy($id)
+    public function destroy($id_resena)
     {
-        $resena = Resena::where('id_usuario', Auth::id())
-            ->where('id', $id)
+        $resena = Resena::where('id_usuario', Auth::user()->id_usuario)
+            ->where('id_resena', $id_resena)
             ->firstOrFail();
             
         $resena->delete();
