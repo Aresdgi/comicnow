@@ -5,7 +5,7 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Crear Nuevo Autor</h1>
         <a href="{{ route('admin.autores.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-            <i class="fas fa-arrow-left mr-2"></i>Volver
+            Volver
         </a>
     </div>
 
@@ -62,7 +62,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <i class="fas fa-save mr-2"></i>Crear Autor
+                    Crear Autor
                 </button>
             </div>
         </form>

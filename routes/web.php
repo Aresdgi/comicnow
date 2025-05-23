@@ -81,7 +81,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::resource('comics', AdminComicController::class);
     
     // Rutas para gestión de autores
-    Route::resource('autores', AutorController::class);
+    Route::resource('autores', AutorController::class)->parameters([
+        'autores' => 'autor'
+    ]);
     
     // Rutas para gestión de usuarios (solo listado)
     Route::get('users', [UsuarioController::class, 'index'])->name('users.index');

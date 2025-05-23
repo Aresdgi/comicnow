@@ -49,8 +49,9 @@ class AutorController extends Controller
     /**
      * Muestra el autor especificado.
      */
-    public function show(Autor $autor)
+    public function show($autor)
     {
+        $autor = Autor::findOrFail($autor);
         $comics = Comic::where('id_autor', $autor->id_autor)->paginate(6);
         return view('admin.autores.show', compact('autor', 'comics'));
     }
@@ -58,16 +59,19 @@ class AutorController extends Controller
     /**
      * Muestra el formulario para editar el autor especificado.
      */
-    public function edit(Autor $autor)
+    public function edit($autor)
     {
+        $autor = Autor::findOrFail($autor);
         return view('admin.autores.edit', compact('autor'));
     }
 
     /**
      * Actualiza el autor especificado en la base de datos.
      */
-    public function update(Request $request, Autor $autor)
+    public function update(Request $request, $autor)
     {
+        $autor = Autor::findOrFail($autor);
+        
         $request->validate([
             'nombre' => 'required|string|max:255',
             'biografia' => 'nullable|string',
@@ -86,8 +90,10 @@ class AutorController extends Controller
     /**
      * Elimina el autor especificado de la base de datos.
      */
-    public function destroy(Autor $autor)
+    public function destroy($autor)
     {
+        $autor = Autor::findOrFail($autor);
+        
         // Verificar si tiene comics asociados
         $comicsCount = Comic::where('id_autor', $autor->id_autor)->count();
         

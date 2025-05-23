@@ -6,10 +6,10 @@
         <h1 class="text-3xl font-bold text-gray-800">Detalles del Autor</h1>
         <div class="space-x-2">
             <a href="{{ route('admin.autores.edit', $autor->id_autor) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-edit mr-2"></i>Editar
+                Editar
             </a>
             <a href="{{ route('admin.autores.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-arrow-left mr-2"></i>Volver
+                Volver
             </a>
         </div>
     </div>
@@ -71,7 +71,7 @@
                                 <img src="{{ asset('storage/' . $comic->portada_url) }}" alt="{{ $comic->titulo }}" class="h-16 w-12 object-cover rounded">
                             @else
                                 <div class="h-16 w-12 bg-gray-200 rounded flex items-center justify-center">
-                                    <i class="fas fa-book text-gray-400"></i>
+                                    <span class="text-gray-400 text-xs">Sin imagen</span>
                                 </div>
                             @endif
                         </td>
@@ -81,8 +81,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $comic->categoria }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($comic->precio, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.comics.show', $comic->id_comic) }}" class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
+                            <a href="{{ route('admin.comics.show', $comic->id_comic) }}" class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded border border-blue-600 hover:bg-blue-50">
+                                Ver
                             </a>
                         </td>
                     </tr>

@@ -3,9 +3,9 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Administración de Cómics</h1>
-        <a href="{{ route('admin.comics.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Añadir Nuevo Cómic
+        <h1 class="text-3xl font-bold text-gray-800">Gestión de Cómics</h1>
+        <a href="{{ route('admin.comics.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Nuevo Cómic
         </a>
     </div>
     
@@ -52,13 +52,13 @@
                     <td class="py-3 px-4">{{ $comic->categoria }}</td>
                     <td class="py-3 px-4">
                         <div class="flex space-x-2">
-                            <a href="{{ route('admin.comics.show', $comic->id_comic) }}" class="text-blue-600 hover:text-blue-900">Ver</a>
-                            <a href="{{ route('admin.comics.edit', $comic->id_comic) }}" class="text-yellow-600 hover:text-yellow-900">Editar</a>
+                            <a href="{{ route('admin.comics.show', $comic->id_comic) }}" class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded border border-blue-600 hover:bg-blue-50">Ver</a>
+                            <a href="{{ route('admin.comics.edit', $comic->id_comic) }}" class="text-yellow-600 hover:text-yellow-900 px-2 py-1 rounded border border-yellow-600 hover:bg-yellow-50">Editar</a>
                             
                             <form action="{{ route('admin.comics.destroy', $comic->id_comic) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este cómic?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900">Eliminar</button>
+                                <button type="submit" class="text-red-600 hover:text-red-900 px-2 py-1 rounded border border-red-600 hover:bg-red-50">Eliminar</button>
                             </form>
                         </div>
                     </td>
