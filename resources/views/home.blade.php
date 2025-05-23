@@ -48,7 +48,7 @@
                 </div>
                 <!-- Feature 2 -->
                 <div class="space-y-4">
-                    <img src="https://sm.ign.com/t/ign_es/screenshot/b/bnick-fury/bnick-fury-agent-of-shield-4bbrbrbdrawn-byb-jim-sterankobrbr_r4n1.1080.jpg" alt="Jeremiah" class="w-[250px] h-auto rounded shadow-md mx-auto" />
+                    <img src="https://sm.ign.com/t/ign_es/screenshot/b/bbatman-ha/bbatman-harley-quinn-1bbrbrbdrawn-byb-alex-rossbrbrthe-late_zasj.1080.jpg" alt="Jeremiah" class="w-[250px] h-auto rounded shadow-md mx-auto" />
                     <h3 class="text-xl font-semibold text-white">Un enorme catálogo</h3>
                     <p class="text-gray-400">
                         Disfruta de una amplia selección de cómics, con nuevas opciones de lectura y descargas.
@@ -56,7 +56,7 @@
                 </div>
                 <!-- Feature 3 -->
                 <div class="space-y-4">
-                    <img src="https://sm.ign.com/t/ign_es/screenshot/b/bnick-fury/bnick-fury-agent-of-shield-4bbrbrbdrawn-byb-jim-sterankobrbr_r4n1.1080.jpg" alt="Conan" class="w-[250px] h-auto rounded shadow-md mx-auto" />
+                    <img src="https://sm.ign.com/t/ign_es/screenshot/b/bcrisis-on/bcrisis-on-infinite-earths-7bbrbrbdrawn-byb-george-perezbrbr_brz1.1080.jpg" alt="Conan" class="w-[250px] h-auto rounded shadow-md mx-auto" />
                     <h3 class="text-xl font-semibold text-white">Interfaz amigable</h3>
                     <p class="text-gray-400">
                         Navega fácilmente y encuentra tus últimos cómics favoritos.

@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center">
-                        <x-application-mark class="block h-9 w-auto" />
+                        <img src="{{ asset('images/logo.png') }}" alt="ComicNow" class="h-16 w-auto">
                     </a>
                 </div>
 
