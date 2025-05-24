@@ -43,8 +43,8 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'throw' => true,
-            'report' => true,
+            'throw' => false,
+            'report' => false,
         ],
 
         's3' => [

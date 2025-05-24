@@ -7,7 +7,6 @@ use App\Models\Comic;
 use App\Models\Autor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class ComicController extends Controller
 {
@@ -102,30 +101,12 @@ class ComicController extends Controller
 
         // Manejar la imagen de portada SOLO si se sube una nueva
         if ($request->hasFile('portada_url')) {
-            Log::info('Editando portada: archivo recibido');
-            Log::info('Nombre original del archivo: ' . $request->file('portada_url')->getClientOriginalName());
-            Log::info('Tamaño del archivo: ' . $request->file('portada_url')->getSize() . ' bytes');
-            
             // Eliminar la portada anterior si existe
             if ($comic->portada_url && Storage::disk('public')->exists($comic->portada_url)) {
                 Storage::disk('public')->delete($comic->portada_url);
-                Log::info('Portada anterior eliminada: ' . $comic->portada_url);
             }
-            
-            try {
-                $portadaPath = $request->file('portada_url')->store('portadas', 'public');
-                if ($portadaPath) {
-                    $data['portada_url'] = $portadaPath;
-                    Log::info('Nueva portada guardada: ' . $portadaPath);
-                } else {
-                    Log::error('Error: store() devolvió false o null');
-                }
-            } catch (\Exception $e) {
-                Log::error('Excepción al guardar portada: ' . $e->getMessage());
-                return back()->with('error', 'Error al guardar la imagen de portada');
-            }
-        } else {
-            Log::info('Editando cómic sin nueva portada, manteniendo: ' . $comic->portada_url);
+            $portadaPath = $request->file('portada_url')->store('portadas', 'public');
+            $data['portada_url'] = $portadaPath;
         }
 
         // Manejar el archivo del comic SOLO si se sube uno nuevo
