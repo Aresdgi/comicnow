@@ -96,9 +96,10 @@ class ComicController extends Controller
             'archivo_comic' => 'nullable|file|mimes:pdf,cbz,cbr|max:20480', // 20MB max
         ]);
 
-        $data = $request->all();
+        // Solo tomar los campos que siempre se actualizan
+        $data = $request->only(['titulo', 'id_autor', 'descripcion', 'precio', 'categoria']);
 
-        // Manejar la imagen de portada
+        // Manejar la imagen de portada SOLO si se sube una nueva
         if ($request->hasFile('portada_url')) {
             // Eliminar la portada anterior si existe
             if ($comic->portada_url && Storage::disk('public')->exists($comic->portada_url)) {
@@ -108,7 +109,7 @@ class ComicController extends Controller
             $data['portada_url'] = $portadaPath;
         }
 
-        // Manejar el archivo del comic
+        // Manejar el archivo del comic SOLO si se sube uno nuevo
         if ($request->hasFile('archivo_comic')) {
             // Eliminar el archivo anterior si existe
             if ($comic->archivo_comic && Storage::disk('public')->exists($comic->archivo_comic)) {
