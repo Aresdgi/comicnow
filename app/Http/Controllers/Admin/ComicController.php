@@ -7,6 +7,7 @@ use App\Models\Comic;
 use App\Models\Autor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ComicController extends Controller
 {
@@ -101,12 +102,17 @@ class ComicController extends Controller
 
         // Manejar la imagen de portada SOLO si se sube una nueva
         if ($request->hasFile('portada_url')) {
+            Log::info('Editando portada: archivo recibido');
             // Eliminar la portada anterior si existe
             if ($comic->portada_url && Storage::disk('public')->exists($comic->portada_url)) {
                 Storage::disk('public')->delete($comic->portada_url);
+                Log::info('Portada anterior eliminada: ' . $comic->portada_url);
             }
             $portadaPath = $request->file('portada_url')->store('portadas', 'public');
             $data['portada_url'] = $portadaPath;
+            Log::info('Nueva portada guardada: ' . $portadaPath);
+        } else {
+            Log::info('Editando cómic sin nueva portada, manteniendo: ' . $comic->portada_url);
         }
 
         // Manejar el archivo del comic SOLO si se sube uno nuevo
