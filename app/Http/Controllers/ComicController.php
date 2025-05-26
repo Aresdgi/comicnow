@@ -13,9 +13,22 @@ class ComicController extends Controller
     /**
      * Muestra una lista de todos los comics.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comics = Comic::with('autor')->get();
+        $query = Comic::with('autor');
+        
+        // Si hay búsqueda, filtrar por título o autor
+        if ($request->filled('buscar')) {
+            $buscar = $request->get('buscar');
+            $query->where(function($q) use ($buscar) {
+                $q->where('titulo', 'like', '%' . $buscar . '%')
+                  ->orWhereHas('autor', function($autorQuery) use ($buscar) {
+                      $autorQuery->where('nombre', 'like', '%' . $buscar . '%');
+                  });
+            });
+        }
+        
+        $comics = $query->orderBy('titulo')->get();
         return view('comics.index', compact('comics'));
     }
 
