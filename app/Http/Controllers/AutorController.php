@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Autor;
 use App\Models\Comic;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AutorController extends Controller
 {

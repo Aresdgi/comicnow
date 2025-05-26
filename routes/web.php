@@ -20,8 +20,6 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/comics', [ComicController::class, 'index'])->name('comics.index');
 Route::get('/comics/{comic}', [ComicController::class, 'show'])->name('comics.show');
-Route::get('/autores', [AutorController::class, 'index'])->name('autores.index');
-Route::get('/autores/{id}', [AutorController::class, 'show'])->name('autores.show');
 Route::get('/buscar', [ComicController::class, 'buscar'])->name('comics.buscar');
 Route::get('/contacto', function () { return view('contacto'); })->name('contacto');
 Route::get('/sobre-nosotros', function () { return view('about'); })->name('about');
