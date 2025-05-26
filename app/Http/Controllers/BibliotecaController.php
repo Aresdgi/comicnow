@@ -81,31 +81,7 @@ class BibliotecaController extends Controller
         return view('bibliotecas.leer', compact('entrada', 'comic', 'resenaUsuario', 'promedioValoracion', 'totalResenas'));
     }
 
-    /**
-     * Actualiza el progreso de lectura de un comic.
-     */
-    public function actualizarProgreso(Request $request, $id_comic)
-    {
-        $usuario = Auth::user();
-        $request->validate([
-            'progreso_lectura' => 'required|numeric|min:0|max:100',
-            'ultimo_marcador' => 'required|numeric|min:0',
-        ]);
 
-        $entrada = Biblioteca::where('id_usuario', $usuario->id_usuario)
-                           ->where('id_comic', $id_comic)
-                           ->firstOrFail();
-        
-        $entrada->update([
-            'progreso_lectura' => $request->progreso_lectura,
-            'ultimo_marcador' => $request->ultimo_marcador,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Progreso guardado correctamente'
-        ]);
-    }
 
     /**
      * Elimina un comic de la biblioteca del usuario.
