@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Biblioteca;
 use App\Models\Comic;
-use App\Models\Usuario;
 use App\Models\Resena;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,39 +21,6 @@ class BibliotecaController extends Controller
                               ->get();
                               
         return view('bibliotecas.index', compact('biblioteca', 'usuario'));
-    }
-
-    /**
-     * Almacena un nuevo comic en la biblioteca del usuario.
-     */
-    public function store(Request $request)
-    {
-        $usuario = Auth::user();
-        
-        $request->validate([
-            'id_comic' => 'required|exists:comics,id_comic',
-        ]);
-
-        // Verificar si el comic ya está en la biblioteca
-        $existente = Biblioteca::where('id_usuario', $usuario->id_usuario)
-                             ->where('id_comic', $request->id_comic)
-                             ->first();
-
-        if ($existente) {
-            return redirect()->back()
-                ->with('error', 'Este comic ya está en tu biblioteca.')
-                ->withInput();
-        }
-
-        Biblioteca::create([
-            'id_usuario' => $usuario->id_usuario,
-            'id_comic' => $request->id_comic,
-            'progreso_lectura' => 0.00,
-            'ultimo_marcador' => 0,
-        ]);
-
-        return redirect()->route('biblioteca.index')
-            ->with('success', 'Comic añadido a tu biblioteca');
     }
 
     /**
@@ -80,8 +46,6 @@ class BibliotecaController extends Controller
         
         return view('bibliotecas.leer', compact('entrada', 'comic', 'resenaUsuario', 'promedioValoracion', 'totalResenas'));
     }
-
-
 
     /**
      * Elimina un comic de la biblioteca del usuario.
