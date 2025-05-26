@@ -64,7 +64,7 @@
                     <ul class="space-y-2">
                         @auth
                         <li>
-                            <a href="{{ route('usuario.perfil') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                            <a href="{{ route('profile.show') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
                                 Mi perfil
                             </a>
                         </li>

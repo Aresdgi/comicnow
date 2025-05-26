@@ -37,9 +37,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return redirect()->route('user.dashboard');
     })->name('dashboard');
     
-    // Perfil de usuario
-    Route::get('/perfil', [UsuarioController::class, 'perfil'])->name('usuario.perfil');
-    Route::put('/perfil', [UsuarioController::class, 'actualizar'])->name('usuario.actualizar');
+
     
     // Biblioteca del usuario
     Route::get('/biblioteca', [BibliotecaController::class, 'index'])->name('biblioteca.index');
