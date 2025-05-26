@@ -4,7 +4,7 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-6">Biblioteca de Cómics</h1>
                 
-                <!-- Buscador Simple -->
+                <!-- Buscador -->
                 <div class="mb-8 bg-gray-50 p-6 rounded-lg">
                     <form method="GET" action="{{ route('comics.index') }}" class="flex flex-col md:flex-row gap-4">
                         <div class="flex-1">
