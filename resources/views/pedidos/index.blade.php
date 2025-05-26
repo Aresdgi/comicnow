@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-medium">${{ number_format($detalle->precio * $detalle->cantidad, 2) }}</p>
+                                        <p class="font-medium">{{ number_format($detalle->precio * $detalle->cantidad, 2) }}€</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -56,16 +56,11 @@
                             <p class="text-sm text-gray-600">Método de pago: <span class="font-medium">{{ ucfirst($pedido->metodo_pago) }}</span></p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xl font-bold text-green-600">Total: ${{ number_format($pedido->total, 2) }}</p>
+                            <p class="text-xl font-bold text-green-600">Total: {{ number_format($pedido->total, 2) }}€</p>
                         </div>
                     </div>
                     
-                    <div class="mt-4 flex justify-end">
-                        <a href="{{ route('pedidos.show', $pedido->id_pedido) }}" 
-                           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-                            Ver Detalles
-                        </a>
-                    </div>
+
                 </div>
             @endforeach
         </div>
