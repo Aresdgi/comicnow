@@ -30,43 +30,6 @@ class CarritoController extends Controller
     }
     
     /**
-     * Agrega un cómic al carrito o incrementa su cantidad
-     */
-    public function agregar(Request $request)
-    {
-        $request->validate([
-            'id_comic' => 'required|exists:comics,id_comic',
-            'cantidad' => 'required|integer|min:1'
-        ]);
-        
-        $id = $request->id_comic;
-        $cantidad = $request->cantidad;
-        
-        // Obtener el cómic
-        $comic = Comic::findOrFail($id);
-        
-        // Obtener el carrito actual
-        $carrito = session()->get('carrito', []);
-        
-        // Agregar el producto o actualizar la cantidad
-        if (isset($carrito[$id])) {
-            $carrito[$id]['cantidad'] = $carrito[$id]['cantidad'] + $cantidad;
-        } else {
-            $carrito[$id] = [
-                'titulo' => $comic->titulo,
-                'precio' => $comic->precio,
-                'cantidad' => $cantidad,
-                'imagen' => $comic->imagen
-            ];
-        }
-        
-        // Guardar el carrito actualizado en la sesión
-        session()->put('carrito', $carrito);
-        
-        return back()->with('success', 'El cómic "' . $comic->titulo . '" ha sido agregado a su carrito.');
-    }
-    
-    /**
      * Actualiza la cantidad de un ítem en el carrito
      */
     public function actualizar(Request $request, $id_comic)
