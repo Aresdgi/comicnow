@@ -69,7 +69,7 @@
                         <x-nav-link href="{{ route('login') }}" class="text-gray-300 hover:text-white">
                             {{ __('Iniciar sesión') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 ease-in-out">
+                        <x-nav-link href="{{ route('register') }}" class="text-gray-300 hover:text-white">
                             {{ __('Registrarse') }}
                         </x-nav-link>
                     </div>

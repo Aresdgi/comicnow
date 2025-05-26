@@ -17,7 +17,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $comic->titulo ?? 'Título del Comic' }}</h3>
                                 <p class="text-sm text-gray-600">{{ $comic->autor->nombre ?? 'Autor' }}</p>
                                 <div class="mt-4 flex justify-between items-center">
-                                    <span class="text-gray-700 font-medium">{{ $comic->precio ?? '$0.00' }}</span>
+                                    <span class="text-green-700 font-medium">{{ $comic->precio ?? '$0.00' }}€</span>
                                     <a href="{{ route('comics.show', $comic) }}" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700">Ver</a>
                                 </div>
                             </div>

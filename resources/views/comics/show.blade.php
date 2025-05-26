@@ -47,7 +47,7 @@
             <div class="md:w-2/3 p-6">
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 font-medium">Precio</p>
-                    <p class="text-xl font-bold text-green-600">€{{ number_format($comic->precio, 2) }}</p>
+                    <p class="text-xl font-bold text-green-600">{{ number_format($comic->precio, 2) }}€</p>
                 </div>
                 
                 <div class="mb-4">
