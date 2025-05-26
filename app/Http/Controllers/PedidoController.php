@@ -20,5 +20,19 @@ class PedidoController extends Controller
         return view('pedidos.index', compact('pedidos'));
     }
 
+    /**
+     * Muestra los detalles de un pedido específico.
+     */
+    public function show(Pedido $pedido)
+    {
+        // Verificar que el pedido pertenece al usuario autenticado
+        if ($pedido->id_usuario !== Auth::id()) {
+            abort(403, 'No tienes permiso para ver este pedido.');
+        }
 
+        // Cargar las relaciones necesarias
+        $pedido->load(['detalles.comic']);
+
+        return view('pedidos.show', compact('pedido'));
+    }
 }

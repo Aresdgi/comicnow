@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     
     // Historial de pedidos
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
+    Route::get('/pedidos/{pedido}', [PedidoController::class, 'show'])->name('pedidos.show');
     
     // Reseñas
     Route::post('/resenas/crear/{comic_id}', [ResenaController::class, 'store'])->name('resenas.store');
