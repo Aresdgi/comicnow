@@ -7,24 +7,11 @@
     @if($pedidos->count() > 0)
         <div class="space-y-4">
             @foreach($pedidos as $pedido)
-                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 
-                    @if($pedido->estado == 'completado') border-green-500
-                    @elseif($pedido->estado == 'pendiente') border-yellow-500
-                    @else border-gray-500 @endif">
+                <div class="bg-white shadow-md rounded-lg p-6">
                     
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-lg font-semibold">Pedido #{{ $pedido->id_pedido }}</h3>
-                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($pedido->fecha)->format('d/m/Y H:i') }}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium
-                                @if($pedido->estado == 'completado') bg-green-100 text-green-800
-                                @elseif($pedido->estado == 'pendiente') bg-yellow-100 text-yellow-800
-                                @else bg-gray-100 text-gray-800 @endif">
-                                {{ ucfirst($pedido->estado) }}
-                            </span>
-                        </div>
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold">Pedido #{{ $pedido->id_pedido }}</h3>
+                        <p class="text-gray-600">{{ \Carbon\Carbon::parse($pedido->fecha)->format('d/m/Y H:i') }}</p>
                     </div>
                     
                     <div class="mb-4">
@@ -51,10 +38,7 @@
                         </div>
                     </div>
                     
-                    <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-                        <div>
-                            <p class="text-sm text-gray-600">Método de pago: <span class="font-medium">{{ ucfirst($pedido->metodo_pago) }}</span></p>
-                        </div>
+                    <div class="flex justify-end items-center pt-4 border-t border-gray-200">
                         <div class="text-right">
                             <p class="text-xl font-bold text-green-600">Total: {{ number_format($pedido->total, 2) }}€</p>
                         </div>
