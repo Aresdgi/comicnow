@@ -29,64 +29,77 @@
                 </div>
             </div>
             
-            <!-- Columna Cómic Europeo -->
+            <!-- Columna Productos -->
             <div class="space-y-4">
                 <h5 class="text-orange-300 text-xl font-bold uppercase tracking-wide">
-                    Cómic Europeo
+                    Productos
                 </h5>
                 <nav class="space-y-3">
                     <ul class="space-y-2">
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Categorías
+                            <a href="{{ route('comics.index') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Todos los cómics
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Artistas
+                            <a href="{{ route('home') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Inicio
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Novedades
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Emergentes
+                            <a href="{{ route('about') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Sobre nosotros
                             </a>
                         </li>
                     </ul>
                 </nav>
             </div>
             
-            <!-- Columna Manga -->
+            <!-- Columna Mi Cuenta -->
             <div class="space-y-4">
                 <h5 class="text-orange-300 text-xl font-bold uppercase tracking-wide">
-                    Manga
+                    Mi Cuenta
                 </h5>
                 <nav class="space-y-3">
                     <ul class="space-y-2">
+                        @auth
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Categorías
+                            <a href="{{ route('usuario.perfil') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Mi perfil
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Artistas
+                            <a href="{{ route('biblioteca.index') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Mi biblioteca
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Novedades
+                            <a href="{{ route('carrito.index') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Carrito
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
-                                Emergentes
+                            <a href="{{ route('pedidos.index') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Mis pedidos
                             </a>
                         </li>
+                        @else
+                        <li>
+                            <a href="{{ route('login') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Iniciar sesión
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('register') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Registrarse
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('carrito.index') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                                Carrito
+                            </a>
+                        </li>
+                        @endauth
                     </ul>
                 </nav>
             </div>
