@@ -112,17 +112,17 @@
                 <nav class="space-y-3">
                     <ul class="space-y-2">
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                            <a href="{{ route('policy.show') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
                                 Política de privacidad
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                            <a href="{{ route('terms.show') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
                                 Términos de uso
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                            <a href="{{ route('cookies.show') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
                                 Política de Cookies
                             </a>
                         </li>

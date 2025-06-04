@@ -23,6 +23,9 @@ Route::get('/comics/{comic}', [ComicController::class, 'show'])->name('comics.sh
 Route::get('/buscar', [ComicController::class, 'buscar'])->name('comics.buscar');
 Route::get('/contacto', function () { return view('contacto'); })->name('contacto');
 Route::get('/sobre-nosotros', function () { return view('about'); })->name('about');
+Route::get('/politica-privacidad', function () { return view('policy'); })->name('policy.show');
+Route::get('/terminos-uso', function () { return view('terms'); })->name('terms.show');
+Route::get('/politica-cookies', function () { return view('cookies'); })->name('cookies.show');
 
 // Configuración de Cashier para Stripe
 Route::post('/stripe/webhook', [\Laravel\Cashier\Http\Controllers\WebhookController::class, 'handleWebhook'])->name('cashier.webhook');
