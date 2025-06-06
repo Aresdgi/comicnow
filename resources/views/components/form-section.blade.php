@@ -1,3 +1,4 @@
+{{-- Layout de formularios con Livewire de 3 columnas (título, descripción, formulario y acciones) --}}
 @props(['submit'])
 
 <div {{ $attributes->merge(['class' => 'md:grid md:grid-cols-3 md:gap-6']) }}>

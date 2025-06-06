@@ -1,3 +1,4 @@
+{{-- Modal base con Alpine.js y Livewire, usado como fundación para otros modales --}}
 @props(['id', 'maxWidth'])
 
 @php

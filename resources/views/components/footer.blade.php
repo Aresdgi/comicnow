@@ -1,3 +1,4 @@
+{{-- Footer del sitio con información de contacto, navegación, enlaces legales y horarios de ComicNow --}}
 <footer class="bg-gradient-to-b from-[#111827] to-[#4a5c6a] text-white">
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-5 gap-8">

@@ -1,3 +1,4 @@
+{{-- Modal de confirmación con icono de advertencia para acciones peligrosas (eliminar tokens API) --}}
 @props(['id' => null, 'maxWidth' => null])
 
 <x-modal :id="$id" :maxWidth="$maxWidth" {{ $attributes }}>

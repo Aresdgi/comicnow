@@ -1,3 +1,4 @@
+{{-- Enlaces de navegación principal con estado activo (amarillo cuando estás en esa página) --}}
 @props(['active'])
 
 @php

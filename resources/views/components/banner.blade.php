@@ -1,3 +1,4 @@
+{{-- Notificaciones tipo banner en la parte superior (success=verde, danger=rojo, warning=amarillo) --}}
 @props(['style' => session('flash.bannerStyle', 'success'), 'message' => session('flash.banner')])
 
 <div x-data="{{ json_encode(['show' => true, 'style' => $style, 'message' => $message]) }}"

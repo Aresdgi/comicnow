@@ -1,3 +1,4 @@
+{{-- Enlaces de navegación para móviles (menú hamburguesa) con estado activo --}}
 @props(['active'])
 
 @php

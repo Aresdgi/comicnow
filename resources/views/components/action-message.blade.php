@@ -1,3 +1,4 @@
+{{-- Muestra mensajes de confirmación temporales (2 segundos) después de acciones exitosas como "Saved." --}}
 @props(['on'])
 
 <div x-data="{ shown: false, timeout: null }"

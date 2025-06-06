@@ -1,3 +1,4 @@
+{{-- Muestra errores de validación específicos en texto rojo debajo de cada campo --}}
 @props(['for'])
 
 @error($for)

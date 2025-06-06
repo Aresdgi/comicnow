@@ -1,3 +1,4 @@
+{{-- Modal de diálogo para confirmaciones (eliminar cuenta, cerrar sesiones, confirmar contraseña) --}}
 @props(['id' => null, 'maxWidth' => null])
 
 <x-modal :id="$id" :maxWidth="$maxWidth" {{ $attributes }}>

@@ -1,3 +1,4 @@
+{{-- Modal que solicita confirmación de contraseña antes de realizar acciones sensibles (2FA, eliminar cuenta) --}}
 @props(['title' => __('Confirm Password'), 'content' => __('For your security, please confirm your password to continue.'), 'button' => __('Confirm')])
 
 @php

@@ -1,3 +1,4 @@
+{{-- Muestra todos los errores de validación en una lista (usado en páginas de autenticación) --}}
 @if ($errors->any())
     <div {{ $attributes }}>
         <div class="font-medium text-red-600">{{ __('Whoops! Something went wrong.') }}</div>

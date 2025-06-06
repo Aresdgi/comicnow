@@ -1,3 +1,4 @@
+{{-- Contenedor centrado para todas las páginas de autenticación (login, register, forgot password, etc.) --}}
 <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
     <div>
         {{ $logo }}
