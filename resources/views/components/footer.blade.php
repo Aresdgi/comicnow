@@ -47,7 +47,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#sobre-nosotros" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
+                            <a href="{{ route('about') }}" class="text-amber-100 hover:text-white hover:border-b hover:border-orange-400 transition-colors duration-200 text-lg cursor-pointer">
                                 Sobre nosotros
                             </a>
                         </li>
