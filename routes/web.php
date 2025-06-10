@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ComicController;
 use App\Http\Controllers\AutorController;
 use App\Http\Controllers\UsuarioController;
@@ -34,7 +35,7 @@ Route::post('/stripe/webhook', [\Laravel\Cashier\Http\Controllers\WebhookControl
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     // Dashboard principal - redirecciona según el rol
     Route::get('/dashboard', function () {
-        if(auth()->user()->isAdmin()) {
+        if(Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('user.dashboard');
